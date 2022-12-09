@@ -19,8 +19,9 @@ def on_message(ws, mess):
     global resent_poloniex
     mess = json.loads(mess)
     # print(mess["s"])
-    resent_poloniex[mess["s"]] = (mess["s"], "poloniex", float(mess["b"]), float(mess["a"]))
-    # print(1)
+    resent_poloniex[mess["data"][0]["symbol"]] = (mess["data"][0]["symbol"], "poloniex", float(mess["data"][0]["bids"][0][0]), float(mess["data"][0]["asks"][0][0]))
+    print(mess["symbol"])
+
 
 
 def on_close(ws):
@@ -41,9 +42,12 @@ def scheduling():
         global file
         now_time = int(datetime.utcnow().timestamp())
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
-            for e in resent.values():
-                # file.write( + "\n")
-                print("\t".join(map(str, (now_time, *e))), file=file)
+            print(resent_poloniex.keys())
+            if 'event' not in resent_poloniex.keys():
+                for e in resent_poloniex.values():
+                    # file.write( + "\n")
+                    print("\t".join(map(str, (now_time, *e))), file=file)
+
 
     schedule.every(1).seconds.do(job)
 
