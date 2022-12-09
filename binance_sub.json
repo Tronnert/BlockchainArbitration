@@ -1,0 +1,9 @@
+{
+    "method": "SUBSCRIBE", 
+    "params": 
+        [
+            "btcusdt@bookTicker",
+            "ethusdt@bookTicker"
+        ], 
+    "id": 1
+}

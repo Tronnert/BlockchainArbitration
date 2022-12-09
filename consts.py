@@ -1,0 +1,1 @@
+GLOBAL_OUTPUT_FILE_NAME = "logs.tsv"
