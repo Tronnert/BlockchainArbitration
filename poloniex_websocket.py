@@ -19,7 +19,6 @@ class PoloniexWebsocket():
     def job(self) -> None:
         now_time = int(datetime.utcnow().timestamp())
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
-            print(self.resent, 1)
             if 'event' not in self.resent.keys():
                 for e in self.resent.values():
                     print("\t".join(map(str, (now_time, *e))), file=file)
