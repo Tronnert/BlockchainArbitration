@@ -1,0 +1,5 @@
+{
+  "event": "subscribe",
+  "channel": ["book"],
+  "symbols": ["BTC_USDT"]
+}
