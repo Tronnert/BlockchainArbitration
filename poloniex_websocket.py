@@ -19,7 +19,7 @@ def on_message(ws, mess):
     global resent_poloniex
     mess = json.loads(mess)
     # print(mess["s"])
-    resent_poloniex[mess["data"][0]["symbol"]] = (mess["data"][0]["symbol"], "poloniex", float(mess["data"][0]["bids"][0][0]), float(mess["data"][0]["asks"][0][0]))
+    resent_poloniex[mess["data"][0]["symbol"]] = (*mess["data"][0]["symbol"].split('_'), "poloniex", float(mess["data"][0]["bids"][0][0]), float(mess["data"][0]["asks"][0][0]))
     print(mess["symbol"])
 
 
@@ -42,7 +42,6 @@ def scheduling():
         global file
         now_time = int(datetime.utcnow().timestamp())
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
-            print(resent_poloniex.keys())
             if 'event' not in resent_poloniex.keys():
                 for e in resent_poloniex.values():
                     # file.write( + "\n")
