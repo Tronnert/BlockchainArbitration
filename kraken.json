@@ -1,0 +1,7 @@
+{
+  "event": "subscribe",
+  "pair": ["XBT/USD"],
+  "subscription": {
+    "name": "book"
+  }
+}
