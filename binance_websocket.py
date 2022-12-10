@@ -7,6 +7,7 @@ from consts import GLOBAL_OUTPUT_FILE_NAME
 class BinanceWebsocket():
     def __init__(self) -> None:
         self.resent = dict()
+        self.different_names = json.loads(open('different_names.json').read())
         # self.schedule_thread = threading.Thread(target=self.scheduling)
         self.websocket_thread = threading.Thread(target=self.run_websocket)
 
