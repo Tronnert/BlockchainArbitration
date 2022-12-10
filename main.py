@@ -2,6 +2,7 @@ from get_top100pairs import get_top100pars
 from sheduler import Sheduler
 from binance_websocket import BinanceWebsocket
 from poloniex_websocket import PoloniexWebsocket
+from kraken_websocket import KrakenWebsocket
 
 
 if __name__ == "__main__":
@@ -10,6 +11,9 @@ if __name__ == "__main__":
     binancewebsocket.start()
     poloniexWebsocket = PoloniexWebsocket()
     poloniexWebsocket.start()
-    sheduler = Sheduler(binancewebsocket, poloniexWebsocket)
+
+    krakenWebsocket = KrakenWebsocket()
+    krakenWebsocket.start()
+
+    sheduler = Sheduler(binancewebsocket, poloniexWebsocket, krakenWebsocket)
     sheduler.start()
-    
