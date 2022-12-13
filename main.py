@@ -7,13 +7,15 @@ from kraken_websocket import KrakenWebsocket
 
 if __name__ == "__main__":
     top100pairs = get_top100pars()
-    binancewebsocket = BinanceWebsocket()
+
+    binancewebsocket = BinanceWebsocket(top100pairs)
     binancewebsocket.start()
-    poloniexWebsocket = PoloniexWebsocket()
-    poloniexWebsocket.start()
 
-    krakenWebsocket = KrakenWebsocket()
-    krakenWebsocket.start()
+    poloniexwebsocket = PoloniexWebsocket(top100pairs)
+    poloniexwebsocket.start()
 
-    sheduler = Sheduler(binancewebsocket, poloniexWebsocket, krakenWebsocket)
+    krakenwebsocket = KrakenWebsocket(top100pairs)
+    krakenwebsocket.start()
+
+    sheduler = Sheduler(binancewebsocket, poloniexwebsocket, krakenwebsocket) #, poloniexWebsocket, krakenWebsocket)
     sheduler.start()

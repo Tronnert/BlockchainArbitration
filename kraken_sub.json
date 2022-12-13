@@ -1,6 +1,6 @@
 {
   "event": "subscribe",
-  "pair": ["BTC/USD"],
+  "pair": ["BTC/USDT"],
   "subscription": {
     "name": "book"
   }
