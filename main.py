@@ -3,6 +3,7 @@ from sheduler import Sheduler
 from binance_websocket import BinanceWebsocket
 from poloniex_websocket import PoloniexWebsocket
 from kraken_websocket import KrakenWebsocket
+from gate_websocket import GateWebsocket
 
 
 if __name__ == "__main__":
@@ -17,5 +18,8 @@ if __name__ == "__main__":
     krakenwebsocket = KrakenWebsocket(top100pairs)
     krakenwebsocket.start()
 
-    sheduler = Sheduler(binancewebsocket, poloniexwebsocket, krakenwebsocket) #, poloniexWebsocket, krakenWebsocket)
+    gatewebsocket = GateWebsocket(top100pairs)
+    gatewebsocket.start()
+
+    sheduler = Sheduler(binancewebsocket, poloniexwebsocket, krakenwebsocket, gatewebsocket) #, poloniexWebsocket, krakenWebsocket)
     sheduler.start()
