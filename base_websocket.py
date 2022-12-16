@@ -11,7 +11,7 @@ class BaseWebsocket():
         self.streamname = streamname
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
         self.websocket_thread = threading.Thread(target=self.run_websocket)
-        self.list_of_symbols = []
+        self.list_of_symbols = {}
 
     def return_self_name(self):
         return self.__class__.__name__
@@ -25,7 +25,8 @@ class BaseWebsocket():
     def job(self) -> None:
         now_time = int(datetime.utcnow().timestamp())
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
-            for e in self.resent.values():
+            x = self.resent.copy().values()
+            for e in x:
                 print("\t".join(map(str, (now_time, *map(stable_decimal_places, e)))), file=file)
 
     def on_open(self, ws) -> None:
@@ -47,5 +48,5 @@ class BaseWebsocket():
 
 def stable_decimal_places(one):
     if isinstance(one, float):
-        return f'{one:.4f}'
+        return f'{one:.10f}'
     return one
