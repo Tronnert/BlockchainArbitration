@@ -5,6 +5,12 @@ class PoloniexWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
 
+    def made_sub_json(self) -> None:
+        sub_json = super().made_sub_json()
+        sub_json["symbols"] = list(map(lambda x: "_".join(x), self.list_of_symbols.values()))
+        print(sub_json)
+        return sub_json
+
     def on_message(self, ws, mess) -> None:
         mess = super().on_message(ws, mess)
         cur1, cur2 = mess["data"][0]["symbol"].split('_')
