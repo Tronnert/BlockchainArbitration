@@ -10,3 +10,6 @@ POLONIEX_STREAM_NAME = "wss://ws.poloniex.com/ws/public"
 
 KRAKEN_SUB_FILE = "kraken_sub.json"
 KRAKEN_STREAM_NAME = "wss://ws.kraken.com"
+
+HUOBI_SUB_FILE = "huobi_sub.json"
+HUOBI_STREAM_NAME = "wss://api.huobi.pro/ws"
