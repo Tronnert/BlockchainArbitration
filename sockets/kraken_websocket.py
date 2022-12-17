@@ -1,5 +1,5 @@
 from consts import KRAKEN_SUB_FILE, KRAKEN_STREAM_NAME
-from base_websocket import BaseWebsocket
+from sockets.base_websocket import BaseWebsocket
 from requests import get
 
 

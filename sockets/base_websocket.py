@@ -4,6 +4,7 @@ import threading
 import json
 from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME
 
+
 class BaseWebsocket():
     def __init__(self, subfilename, streamname) -> None:
         self.resent = dict()

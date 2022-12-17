@@ -1,11 +1,9 @@
 from sheduler import Sheduler
-from binance_websocket import BinanceWebsocket
-from poloniex_websocket import PoloniexWebsocket
-from kraken_websocket import KrakenWebsocket
-from gate_websocket import GateWebsocket
-from huobi_websocket import HuobiWebsocket
-from consts import GLOBAL_OUTPUT_FILE_NAME
-
+from sockets.binance_websocket import BinanceWebsocket
+from sockets.poloniex_websocket import PoloniexWebsocket
+from sockets.kraken_websocket import KrakenWebsocket
+from sockets.gate_websocket import GateWebsocket
+from sockets.huobi_websocket import HuobiWebsocket
 
 if __name__ == "__main__":
     # open(GLOBAL_OUTPUT_FILE_NAME, mode="w").write("dt\tbase\tquote\texchange\tbidPrice\tbidQty\taskPrice\taskQty")

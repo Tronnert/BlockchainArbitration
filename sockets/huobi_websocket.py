@@ -1,5 +1,5 @@
 from consts import HUOBI_SUB_FILE, HUOBI_STREAM_NAME
-from base_websocket import BaseWebsocket
+from sockets.base_websocket import BaseWebsocket
 from requests import get
 import gzip
 

@@ -1,6 +1,7 @@
 from consts import BINANCE_SUB_FILE, BINANCE_STREAM_NAME
-from base_websocket import BaseWebsocket
+from sockets.base_websocket import BaseWebsocket
 from requests import get
+
 
 class BinanceWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:

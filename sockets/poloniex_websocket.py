@@ -1,5 +1,5 @@
 from consts import POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME 
-from base_websocket import BaseWebsocket
+from sockets.base_websocket import BaseWebsocket
 from requests import get
 
 class PoloniexWebsocket(BaseWebsocket):

@@ -1,9 +1,9 @@
 from consts import GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME
-from base_websocket import BaseWebsocket
+from sockets.base_websocket import BaseWebsocket
 import requests
 import json
 import time
-import traceback
+
 
 class GateWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
