@@ -10,13 +10,13 @@ if __name__ == "__main__":
     binancewebsocket = BinanceWebsocket()
     binancewebsocket.start()
 
-    # poloniexwebsocket = PoloniexWebsocket()
-    # poloniexwebsocket.start()
+    poloniexwebsocket = PoloniexWebsocket()
+    poloniexwebsocket.start()
 
     krakenwebsocket = KrakenWebsocket()
     krakenwebsocket.start()
 
     huobiwebsocket = HuobiWebsocket()
     huobiwebsocket.start()
-    sheduler = Sheduler(huobiwebsocket, binancewebsocket, krakenwebsocket) #, poloniexWebsocket, krakenWebsocket)
+    sheduler = Sheduler(huobiwebsocket, binancewebsocket, krakenwebsocket, poloniexwebsocket) #, poloniexWebsocket, krakenWebsocket)
     sheduler.start()
