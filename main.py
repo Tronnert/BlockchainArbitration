@@ -1,4 +1,4 @@
-from sheduler import Sheduler
+from scheduler import Scheduler
 from sockets.binance_websocket import BinanceWebsocket
 from sockets.poloniex_websocket import PoloniexWebsocket
 from sockets.kraken_websocket import KrakenWebsocket
@@ -11,17 +11,18 @@ if __name__ == "__main__":
     binancewebsocket = BinanceWebsocket()
     binancewebsocket.start()
 
-    poloniexwebsocket = PoloniexWebsocket()
-    poloniexwebsocket.start()
-
-    krakenwebsocket = KrakenWebsocket()
-    krakenwebsocket.start()
-
-    gatewebsocket = GateWebsocket()
-    gatewebsocket.start()
-
-    huobiwebsocket = HuobiWebsocket()
-    huobiwebsocket.start()
-
-    sheduler = Sheduler(huobiwebsocket, binancewebsocket, krakenwebsocket, poloniexwebsocket, gatewebsocket)
-    sheduler.start()
+    # poloniexwebsocket = PoloniexWebsocket()
+    # poloniexwebsocket.start()
+    #
+    # krakenwebsocket = KrakenWebsocket()
+    # krakenwebsocket.start()
+    #
+    # gatewebsocket = GateWebsocket()
+    # gatewebsocket.start()
+    #
+    # huobiwebsocket = HuobiWebsocket()
+    # huobiwebsocket.start()
+    #
+    # sheduler = Sheduler(huobiwebsocket, binancewebsocket, krakenwebsocket, poloniexwebsocket, gatewebsocket)
+    scheduler = Scheduler(binancewebsocket)
+    scheduler.start()

@@ -25,11 +25,9 @@ class BaseWebsocket:
     def start(self) -> None:
         self.websocket_thread.start()
 
-    def made_sub_json(self) -> iter[str]:
+    def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
-        data = json.load(open(self.subfilename))
-        data = [data] if not isinstance(data, list) else data
-        return map(json.dumps, data)
+        return json.load(open(self.subfilename))
 
     def job(self) -> None:
         """Запись данных в файл"""
@@ -41,12 +39,17 @@ class BaseWebsocket:
     def on_open(self, ws) -> None:
         """Открытие соединения"""
         print(f"ON {self}")
-        [ws.send(sub) for sub in self.made_sub_json()]
+        data = self.made_sub_json()
+        data = [data] if not isinstance(data, list) else data
+        [ws.send(sub) for sub in map(json.dumps, data)]
 
-    def on_message(self, ws, mess):
-        """Получение и обработка данных"""
-        mess = json.loads(mess)
-        return mess
+    def on_message(self, ws, mess: str) -> None:
+        """Получение данных"""
+        self.process(json.loads(mess))
+
+    def process(self, message: dict) -> None:
+        """Обработка данных"""
+        return message
 
     def run_websocket(self) -> None:
         """Запуск сокета"""

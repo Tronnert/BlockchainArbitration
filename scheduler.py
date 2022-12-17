@@ -2,7 +2,7 @@ from datetime import datetime
 import threading
 
 
-class Sheduler:
+class Scheduler:
     def __init__(self, *args) -> None:
         self.jobs = args
         self.schedule_thread = threading.Thread(target=self.run)

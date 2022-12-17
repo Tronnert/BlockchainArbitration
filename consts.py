@@ -4,6 +4,10 @@ DIFFERENT_NAMES_FILE_NAME = "json/different_names.json"
 
 BINANCE_SUB_FILE = "json/binance_sub.json"
 BINANCE_STREAM_NAME = "wss://stream.binance.com:9443/ws/tronnert_stream"
+BINANCE_SYMBOLS = "https://api.binance.com/api/v3/exchangeInfo"
+BINANCE_TICKER = "https://api.binance.com/api/v3/ticker/24hr"
+BINANCE_MAX_SYMBOLS = 300
+BINANCE_STEP = 50
 
 POLONIEX_SUB_FILE = "json/poloniex_sub.json"
 POLONIEX_STREAM_NAME = "wss://ws.poloniex.com/ws/public"
