@@ -7,22 +7,7 @@ from sockets.huobi_websocket import HuobiWebsocket
 
 if __name__ == "__main__":
     # open(GLOBAL_OUTPUT_FILE_NAME, mode="w").write("dt\tbase\tquote\texchange\tbidPrice\tbidQty\taskPrice\taskQty")
-
-    binancewebsocket = BinanceWebsocket()
-    binancewebsocket.start()
-
-    # poloniexwebsocket = PoloniexWebsocket()
-    # poloniexwebsocket.start()
-    #
-    # krakenwebsocket = KrakenWebsocket()
-    # krakenwebsocket.start()
-    #
-    # gatewebsocket = GateWebsocket()
-    # gatewebsocket.start()
-    #
-    # huobiwebsocket = HuobiWebsocket()
-    # huobiwebsocket.start()
-    #
-    # sheduler = Sheduler(huobiwebsocket, binancewebsocket, krakenwebsocket, poloniexwebsocket, gatewebsocket)
-    scheduler = Scheduler(binancewebsocket)
+    to_start = [BinanceWebsocket()]
+    [socket.start() for socket in to_start]
+    scheduler = Scheduler(*to_start)
     scheduler.start()
