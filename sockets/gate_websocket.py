@@ -27,7 +27,6 @@ class GateWebsocket(BaseWebsocket):
             answer[i['currency_pair']] = {'base': pairs[i['currency_pair']]['base'], 'quote': pairs[i['currency_pair']]['quote']}
         return answer
 
-
     def on_message(self, ws, mess):
         mess = json.loads(mess)['result']
         if 's' in mess.keys():

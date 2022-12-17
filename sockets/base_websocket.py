@@ -5,49 +5,59 @@ import json
 from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME
 
 
-class BaseWebsocket():
-    def __init__(self, subfilename, streamname) -> None:
-        self.resent = dict()
+class BaseWebsocket:
+    """Базовый класс сокета"""
+
+    def __init__(self, subfilename: str, streamname: str) -> None:
+        self.resent = {}
         self.subfilename = subfilename
         self.streamname = streamname
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
         self.websocket_thread = threading.Thread(target=self.run_websocket)
         self.list_of_symbols = {}
 
-    def return_self_name(self):
+    def __repr__(self):
         return self.__class__.__name__
+
+    def __str__(self):
+        return repr(self)
 
     def start(self) -> None:
         self.websocket_thread.start()
 
-    def made_sub_json(self) -> None:
-        return json.load(open(self.subfilename))
+    def made_sub_json(self) -> iter[str]:
+        """Создание параметров соединения"""
+        data = json.load(open(self.subfilename))
+        data = [data] if not isinstance(data, list) else data
+        return map(json.dumps, data)
 
     def job(self) -> None:
+        """Запись данных в файл"""
         now_time = int(datetime.utcnow().timestamp())
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
             x = self.resent.copy().values()
-            for e in x:
-                print("\t".join(map(str, (now_time, *map(stable_decimal_places, e)))), file=file)
+            [print('\t'.join(map(str, (str(now_time), *e))), file=file) for e in x]
 
     def on_open(self, ws) -> None:
-        print(f"ON {self.return_self_name()}")
-        sub_json = self.made_sub_json()
-        if not isinstance(sub_json, list):
-            sub_json = [sub_json]
-        for single_sub in sub_json:
-            ws.send(str(single_sub).replace("'", '''"'''))
+        """Открытие соединения"""
+        print(f"ON {self}")
+        [ws.send(sub) for sub in self.made_sub_json()]
 
     def on_message(self, ws, mess):
+        """Получение и обработка данных"""
         mess = json.loads(mess)
         return mess
 
     def run_websocket(self) -> None:
-        print(f"{self.return_self_name()} START")
-        wsa = websocket.WebSocketApp(self.streamname, on_message=self.on_message, on_open=self.on_open)
+        """Запуск сокета"""
+        print(f"{self} START")
+        wsa = websocket.WebSocketApp(
+            self.streamname, on_message=self.on_message, on_open=self.on_open
+        )
         wsa.run_forever()
+
 
 def stable_decimal_places(one):
     if isinstance(one, float):
         return f'{one:.10f}'
-    return one
+    return str(one)
