@@ -11,5 +11,10 @@ POLONIEX_STREAM_NAME = "wss://ws.poloniex.com/ws/public"
 KRAKEN_SUB_FILE = "kraken_sub.json"
 KRAKEN_STREAM_NAME = "wss://ws.kraken.com"
 
+
+GATES_IO_STREAM_NAME = "wss://api.gateio.ws/ws/v4/"
+GATES_IO_SUB_FILE = "gate_io_sub.json"
+
 HUOBI_SUB_FILE = "huobi_sub.json"
 HUOBI_STREAM_NAME = "wss://api.huobi.pro/ws"
+
