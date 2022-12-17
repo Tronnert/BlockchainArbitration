@@ -31,14 +31,14 @@ class KrakenWebsocket(BaseWebsocket):
                 bids = [[0, 0]]
             if not asks:
                 asks = [[0, 0]]
-            self.resent[symb] = (cur1, cur2, "kraken", float(bids[0][0]), float(asks[0][0]))
+            self.resent[symb] = (cur1, cur2, "kraken", float(bids[0][0]), float(bids[0][1]), float(asks[0][0]), float(asks[0][1]))
         elif 'a' in mess[1].keys():
             asks = mess[1]["a"]
             if not asks:
                 asks = [[0, 0]]
-            self.resent[symb] = (*self.resent[mess[3]][:-1], float(asks[0][0]))
+            self.resent[symb] = (*self.resent[mess[3]][:-1], float(asks[0][0]), float(asks[0][1]))
         elif 'b' in mess[1].keys():
             bids = mess[1]["b"]
             if not bids:
                 bids = [[0, 0]]
-            self.resent[symb] = (*self.resent[mess[3]][:-2], float(bids[0][0]), self.resent[mess[3]][-1])
+            self.resent[symb] = (*self.resent[mess[3]][:-2], float(bids[0][0]), float(bids[0][1]), self.resent[mess[3]][-1])

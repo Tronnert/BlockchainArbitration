@@ -6,8 +6,8 @@ import time
 import traceback
 
 class GateWebsocket(BaseWebsocket):
-    def __init__(self, argv) -> None:
-        super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, argv)
+    def __init__(self, *args) -> None:
+        super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, *args)
         self.list_of_symbols = self.get_best_pairs()
 
 
@@ -31,5 +31,5 @@ class GateWebsocket(BaseWebsocket):
     def on_message(self, ws, mess):
         mess = json.loads(mess)['result']
         if 's' in mess.keys():
-            self.resent[mess['s']] = (*self.list_of_symbols[mess['s']].values(), "gate", float(mess["b"]), float(mess["a"]), float(mess["B"]), float(mess["A"]))
+            self.resent[mess['s']] = (*self.list_of_symbols[mess['s']].values(), "gate", float(mess["b"]), float(mess["B"]), float(mess["a"]), float(mess["A"]))
 

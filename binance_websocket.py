@@ -30,4 +30,4 @@ class BinanceWebsocket(BaseWebsocket):
 
     def on_message(self, ws, mess):
         mess = super().on_message(ws, mess)
-        self.resent[mess["s"]] = (*self.list_of_symbols[mess["s"]], "binance", float(mess["b"]), float(mess["a"]))
+        self.resent[mess["s"]] = (*self.list_of_symbols[mess["s"]], "binance", float(mess["b"]), float(mess["B"]), float(mess["a"]), float(mess["A"]))

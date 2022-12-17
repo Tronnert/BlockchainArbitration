@@ -30,4 +30,7 @@ class HuobiWebsocket(BaseWebsocket):
         mess = super().on_message(ws, gzip.decompress(mess))
         if "tick" in mess:
             mess = mess["tick"]
-            self.resent[mess["symbol"]] = (*self.list_of_symbols[mess["symbol"].upper()], "huobi", float(mess["bid"]), float(mess["ask"]))
+            self.resent[mess["symbol"]] = (*self.list_of_symbols[mess["symbol"].upper()], "huobi", float(mess["bid"]), \
+                                                                                                   float(mess["bidSize"]), \
+                                                                                                   float(mess["ask"]), \
+                                                                                                   float(mess["askSize"]))

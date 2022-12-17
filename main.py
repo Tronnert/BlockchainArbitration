@@ -4,9 +4,11 @@ from poloniex_websocket import PoloniexWebsocket
 from kraken_websocket import KrakenWebsocket
 from gate_websocket import GateWebsocket
 from huobi_websocket import HuobiWebsocket
+from consts import GLOBAL_OUTPUT_FILE_NAME
 
 
 if __name__ == "__main__":
+    # open(GLOBAL_OUTPUT_FILE_NAME, mode="w").write("dt\tbase\tquote\texchange\tbidPrice\tbidQty\taskPrice\taskQty")
 
     binancewebsocket = BinanceWebsocket()
     binancewebsocket.start()
@@ -17,7 +19,7 @@ if __name__ == "__main__":
     krakenwebsocket = KrakenWebsocket()
     krakenwebsocket.start()
 
-    gatewebsocket = GateWebsocket(top100pairs)
+    gatewebsocket = GateWebsocket()
     gatewebsocket.start()
 
     huobiwebsocket = HuobiWebsocket()
