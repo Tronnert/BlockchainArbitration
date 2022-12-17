@@ -11,6 +11,8 @@ BINANCE_STEP = 50
 
 POLONIEX_SUB_FILE = "json/poloniex_sub.json"
 POLONIEX_STREAM_NAME = "wss://ws.poloniex.com/ws/public"
+POLONIEX_TICKER = "https://api.poloniex.com/markets/ticker24h"
+POLONIEX_MAX_SYMBOLS = 300
 
 KRAKEN_SUB_FILE = "json/kraken_sub.json"
 KRAKEN_STREAM_NAME = "wss://ws.kraken.com"

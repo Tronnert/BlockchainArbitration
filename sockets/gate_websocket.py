@@ -9,7 +9,7 @@ class GateWebsocket(BaseWebsocket):
     """Сокет для Gate.io"""
     def __init__(self, *args) -> None:
         super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, *args)
-        self.list_of_symbols = self.get_top_pairs()
+        self.list_of_symbols = self.get_top_pairs(GATES_IO_MAX_SYMBOLS)
 
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
@@ -19,11 +19,11 @@ class GateWebsocket(BaseWebsocket):
         return message
 
     @staticmethod
-    def get_top_pairs() -> dict:
+    def get_top_pairs(top: int) -> dict:
         ticker_pairs = sorted(
             get(GATES_IO_TICKER).json(),
             key=lambda x: x['quote_volume'], reverse=True
-        )[:GATES_IO_MAX_SYMBOLS]
+        )[:top]
         pairs = {i["id"]: {"base": i["base"], "quote": i["quote"]} for i in
                  get(GATES_IO_SYMBOLS).json()}
         answer = {}

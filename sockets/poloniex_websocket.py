@@ -1,15 +1,18 @@
-from consts import POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME 
+from consts import POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, POLONIEX_MAX_SYMBOLS, \
+    POLONIEX_TICKER
 from sockets.base_websocket import BaseWebsocket
 from requests import get
 
+
 class PoloniexWebsocket(BaseWebsocket):
+    """Сокет для Poloniex"""
     def __init__(self, *args) -> None:
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
-        self.list_of_symbols = self.get_top100pairs_poloniex(300)
+        self.list_of_symbols = self.get_top_pairs(POLONIEX_MAX_SYMBOLS)
 
-    def get_top100pairs_poloniex(self, top) -> dict:
-        ticker24 = get("https://api.poloniex.com/markets/ticker24h").json()
-        ticker24 = list(sorted(ticker24, key=lambda x: x["tradeCount"], reverse=True)[:top])
+    @staticmethod
+    def get_top_pairs(top: int) -> dict:
+        ticker24 = sorted(get(POLONIEX_TICKER).json(), key=lambda x: x["tradeCount"], reverse=True)[:top]
         top100pairs_poloniex = dict()
         for pair in ticker24:
             top100pairs_poloniex |= {"".join(pair["symbol"].split("_")): pair["symbol"].split("_")}
