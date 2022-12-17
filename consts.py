@@ -18,6 +18,9 @@ KRAKEN_STREAM_NAME = "wss://ws.kraken.com"
 
 GATES_IO_STREAM_NAME = "wss://api.gateio.ws/ws/v4/"
 GATES_IO_SUB_FILE = "json/gate_io_sub.json"
+GATES_IO_SYMBOLS = "https://api.gateio.ws/api/v4/spot/currency_pairs"
+GATES_IO_TICKER = "https://api.gateio.ws/api/v4/spot/tickers"
+GATES_IO_MAX_SYMBOLS = 300
 
 HUOBI_SUB_FILE = "json/huobi_sub.json"
 HUOBI_STREAM_NAME = "wss://api.huobi.pro/ws"

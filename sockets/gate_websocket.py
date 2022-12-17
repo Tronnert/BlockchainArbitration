@@ -1,34 +1,46 @@
-from consts import GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME
+from consts import GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, GATES_IO_SYMBOLS, \
+    GATES_IO_MAX_SYMBOLS, GATES_IO_TICKER
 from sockets.base_websocket import BaseWebsocket
-import requests
-import json
+from requests import get
 import time
 
 
 class GateWebsocket(BaseWebsocket):
+    """Сокет для Gate.io"""
     def __init__(self, *args) -> None:
         super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, *args)
-        self.list_of_symbols = self.get_best_pairs()
+        self.list_of_symbols = self.get_top_pairs()
 
+    def made_sub_json(self) -> dict:
+        """Создание параметров соединения"""
+        message = super().made_sub_json()
+        message["time"] = int(time.time())
+        message["payload"] = list(self.get_top_pairs().keys())
+        return message
 
-    def made_sub_json(self) -> None:
-        mess = super().made_sub_json()
-        mess["time"] = int(time.time())
-        mess["payload"] = list(self.get_best_pairs().keys())
-        return json.dumps(mess)
-
-    def get_best_pairs(self):
-        ticker_pairs = sorted(requests.get('https://api.gateio.ws/api/v4/spot/tickers').json(), key=lambda x: x['quote_volume'], reverse=True)[:300]
-        pairs = {}
+    @staticmethod
+    def get_top_pairs() -> dict:
+        ticker_pairs = sorted(
+            get(GATES_IO_TICKER).json(),
+            key=lambda x: x['quote_volume'], reverse=True
+        )[:GATES_IO_MAX_SYMBOLS]
+        pairs = {i["id"]: {"base": i["base"], "quote": i["quote"]} for i in
+                 get(GATES_IO_SYMBOLS).json()}
         answer = {}
-        for i in requests.get('https://api.gateio.ws/api/v4/spot/currency_pairs').json():
-            pairs[i['id']] = {'base': i['base'], 'quote': i['quote']}
         for i in ticker_pairs:
-            answer[i['currency_pair']] = {'base': pairs[i['currency_pair']]['base'], 'quote': pairs[i['currency_pair']]['quote']}
+            answer[i['currency_pair']] = {
+                'base': pairs[i['currency_pair']]['base'],
+                'quote': pairs[i['currency_pair']]['quote']
+            }
         return answer
 
-    def on_message(self, ws, mess):
-        mess = json.loads(mess)['result']
-        if 's' in mess.keys():
-            self.resent[mess['s']] = (*self.list_of_symbols[mess['s']].values(), "gate", float(mess["b"]), float(mess["B"]), float(mess["a"]), float(mess["A"]))
+    def process(self, message: dict) -> None:
+        """Обработка данных"""
+        message = message["result"]
+        if 's' not in message.keys():
+            return
+        self.resent[message['s']] = (
+            *self.list_of_symbols[message['s']].values(), "gate", float(message["b"]),
+            float(message["B"]), float(message["a"]), float(message["A"])
+        )
 

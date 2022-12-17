@@ -47,7 +47,7 @@ class BaseWebsocket:
         """Получение данных"""
         self.process(json.loads(mess))
 
-    def process(self, message: dict) -> None:
+    def process(self, message: dict) -> dict:
         """Обработка данных"""
         return message
 
