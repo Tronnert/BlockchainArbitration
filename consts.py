@@ -16,6 +16,7 @@ POLONIEX_MAX_SYMBOLS = 300
 
 KRAKEN_SUB_FILE = "json/kraken_sub.json"
 KRAKEN_STREAM_NAME = "wss://ws.kraken.com"
+KRAKEN_SYMBOLS = "https://api.kraken.com/0/public/AssetPairs"
 
 
 GATES_IO_STREAM_NAME = "wss://api.gateio.ws/ws/v4/"

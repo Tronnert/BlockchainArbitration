@@ -30,6 +30,10 @@ class BaseWebsocket:
         """Создание параметров соединения"""
         return json.load(open(self.subfilename))
 
+    def rename(self, data: list[str]) -> tuple:
+        """Переименование пар"""
+        return tuple(map(lambda x: self.different_names.get(x, x), data))
+
     def job(self) -> None:
         """Запись данных в файл"""
         now_time = int(datetime.utcnow().timestamp())

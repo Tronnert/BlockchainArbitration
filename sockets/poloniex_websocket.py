@@ -9,21 +9,12 @@ class PoloniexWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(POLONIEX_MAX_SYMBOLS)
-        self.rename()
 
-    @staticmethod
-    def get_top_pairs(top: int) -> dict:
+    def get_top_pairs(self, top: int) -> dict:
         ticker24 = sorted(get(POLONIEX_TICKER).json(),
                           key=lambda x: x["tradeCount"], reverse=True)[:top]
-        pairs = {i["symbol"].replace('_', ''): i["symbol"].split('_') for i in ticker24}
+        pairs = {i["symbol"].replace('_', ''): self.rename(i["symbol"].split('_')) for i in ticker24}
         return pairs
-
-    def rename(self):
-        """Переименование пар"""
-        self.list_of_symbols = {
-            i: tuple(map(lambda x: self.different_names.get(x, x), j))
-            for i, j in self.list_of_symbols.items()
-        }
 
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
