@@ -1,5 +1,6 @@
 import websocket
 from datetime import datetime
+from time import time_ns
 import threading
 import json
 from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME
@@ -36,7 +37,7 @@ class BaseWebsocket:
 
     def job(self) -> None:
         """Запись данных в файл"""
-        now_time = int(datetime.utcnow().timestamp())
+        now_time = time_ns()
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
             x = self.resent.copy().values()
             [print('\t'.join(map(str, (now_time, *map(norm, e)))), file=file) for e in x]
