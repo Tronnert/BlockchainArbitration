@@ -3,6 +3,7 @@ from datetime import datetime
 import threading
 import json
 from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME
+from functions import stable_decimal_places as norm
 
 
 class BaseWebsocket:
@@ -34,7 +35,7 @@ class BaseWebsocket:
         now_time = int(datetime.utcnow().timestamp())
         with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
             x = self.resent.copy().values()
-            [print('\t'.join(map(str, (str(now_time), *e))), file=file) for e in x]
+            [print('\t'.join(map(str, (now_time, *map(norm, e)))), file=file) for e in x]
 
     def on_open(self, ws) -> None:
         """Открытие соединения"""
@@ -58,9 +59,3 @@ class BaseWebsocket:
             self.streamname, on_message=self.on_message, on_open=self.on_open
         )
         wsa.run_forever()
-
-
-def stable_decimal_places(one):
-    if isinstance(one, float):
-        return f'{one:.10f}'
-    return str(one)
