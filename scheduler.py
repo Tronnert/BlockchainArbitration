@@ -12,10 +12,10 @@ class Scheduler:
         old = time_ns()
         while True:
             new = time_ns()
-            if new - old >= 10**8:
+            if new - old >= 10 ** 8:
                 old = new
                 for job in self.jobs:
-                    job.job()
+                    job.job(new)
 
     def start(self) -> None:
         self.schedule_thread.start()
