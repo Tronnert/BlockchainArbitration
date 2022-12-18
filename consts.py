@@ -26,4 +26,6 @@ GATES_IO_MAX_SYMBOLS = 300
 
 HUOBI_SUB_FILE = "json/huobi_sub.json"
 HUOBI_STREAM_NAME = "wss://api.huobi.pro/ws"
+HUOBI_SYMBOLS = "https://api.huobi.pro/v2/settings/common/symbols"
+HUOBI_MAX_SYMBOLS = 300
 
