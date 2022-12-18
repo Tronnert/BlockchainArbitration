@@ -28,4 +28,7 @@ class PoloniexWebsocket(BaseWebsocket):
             cur1 = self.different_names[cur1]
         if cur2 in self.different_names.keys():
             cur2 = self.different_names[cur2]
-        self.resent[mess["data"][0]["symbol"]] = (cur1, cur2, "poloniex", float(mess["data"][0]["bids"][0][0]), float(mess["data"][0]["asks"][0][0]))
+        self.resent[mess["data"][0]["symbol"]] = (cur1, cur2, "poloniex", float(mess["data"][0]["bids"][0][0]), \
+                                                                          float(mess["data"][0]["bids"][0][1]), \
+                                                                          float(mess["data"][0]["asks"][0][0]), \
+                                                                          float(mess["data"][0]["asks"][0][1]))
