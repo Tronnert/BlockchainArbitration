@@ -40,7 +40,7 @@ def get_top100pairs_binance() -> dict:
 
 def kraken() -> dict:
     resp = get('https://api.kraken.com/0/public/AssetPairs').json()["result"]
-    fuck = json.load(open("different_names.json"))
+    fuck = json.load(open("json/different_names.json"))
     ans = dict()
     for val in resp.values():
         val = list(map(lambda x: fuck.get(x, x), val["wsname"].split("/")))

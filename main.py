@@ -1,27 +1,14 @@
-from sheduler import Sheduler
-from binance_websocket import BinanceWebsocket
+from scheduler import Scheduler
+from sockets.binance_websocket import BinanceWebsocket
 from sockets.poloniex_websocket import PoloniexWebsocket
-from kraken_websocket import KrakenWebsocket
-from gate_websocket import GateWebsocket
-from huobi_websocket import HuobiWebsocket
+from sockets.kraken_websocket import KrakenWebsocket
+from sockets.gate_websocket import GateWebsocket
+from sockets.huobi_websocket import HuobiWebsocket
 
 if __name__ == "__main__":
     # open(GLOBAL_OUTPUT_FILE_NAME, mode="w").write("dt\tbase\tquote\texchange\tbidPrice\tbidQty\taskPrice\taskQty")
-
-    binancewebsocket = BinanceWebsocket()
-    binancewebsocket.start()
-
-    poloniexwebsocket = PoloniexWebsocket()
-    poloniexwebsocket.start()
-
-    krakenwebsocket = KrakenWebsocket()
-    krakenwebsocket.start()
-
-    gatewebsocket = GateWebsocket()
-    gatewebsocket.start()
-
-    huobiwebsocket = HuobiWebsocket()
-    huobiwebsocket.start()
-
-    sheduler = Sheduler(huobiwebsocket, binancewebsocket, krakenwebsocket, poloniexwebsocket, gatewebsocket)
-    sheduler.start()
+    to_start = [BinanceWebsocket(), PoloniexWebsocket(), KrakenWebsocket(),
+                GateWebsocket(), HuobiWebsocket()]
+    [socket.start() for socket in to_start]
+    scheduler = Scheduler(*to_start)
+    scheduler.start()
