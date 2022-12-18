@@ -15,7 +15,7 @@ class GateWebsocket(BaseWebsocket):
         """Создание параметров соединения"""
         message = super().made_sub_json()
         message["time"] = int(time.time())
-        message["payload"] = list(self.get_top_pairs().keys())
+        message["payload"] = list(self.get_top_pairs(GATES_IO_MAX_SYMBOLS).keys())
         return message
 
     @staticmethod

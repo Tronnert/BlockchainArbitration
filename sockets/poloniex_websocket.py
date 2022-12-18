@@ -29,6 +29,6 @@ class PoloniexWebsocket(BaseWebsocket):
         cur1, cur2 = message["symbol"].split('_')
         self.resent[message["symbol"]] = (
             cur1, cur2, "poloniex", float(message["bids"][0][0]),
-            float(message["data"][0]["bids"][0][1]), float(message["asks"][0][0]),
+            float(message["bids"][0][1]), float(message["asks"][0][0]),
             float(message["asks"][0][1])
         )
