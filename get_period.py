@@ -8,8 +8,8 @@ from argparse import ArgumentParser
 import threading
 
 parser = ArgumentParser("Получение исторических данных за промежуток времени")
-parser.add_argument("--duration", type=int, default=5, nargs='?')
-parser.add_argument("--filename", default="logs11.tsv", nargs="?")
+parser.add_argument("--duration", type=int, default=60, nargs='?')
+parser.add_argument("--filename", default="logs.tsv", nargs="?")
 
 
 if __name__ == '__main__':

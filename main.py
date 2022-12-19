@@ -11,5 +11,5 @@ if __name__ == "__main__":
     to_start = [BinanceWebsocket(), PoloniexWebsocket(), KrakenWebsocket(),
                 GateWebsocket(), HuobiWebsocket()]
     [socket.start() for socket in to_start]
-    scheduler = Scheduler(*to_start)
+    scheduler = Scheduler(*to_start, filename="test44.tsv")
     scheduler.start()

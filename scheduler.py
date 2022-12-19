@@ -1,6 +1,8 @@
 from time import time_ns, time
 from datetime import datetime as dt
 import threading
+import asyncio
+from consts import GLOBAL_OUTPUT_FILE_NAME, GLOBAL_OUTPUT_FOLDER
 
 
 class Scheduler:
@@ -14,15 +16,16 @@ class Scheduler:
     def run(self) -> None:
         start = time()
         old = time_ns()
-        #old = int(dt.utcnow().timestamp())
-        while True:
-            if self.duration is not None and time() - start >= self.duration:
-                break
-            new = time_ns()
-            #new = int(dt.utcnow().timestamp())
-            if new - old >= 10**8:
-                old = new
-                [job.job(new, self.filename) for job in self.jobs]
+        path = self.filename if self.filename is not None else GLOBAL_OUTPUT_FILE_NAME
+        path = GLOBAL_OUTPUT_FOLDER + path
+        with open(path, 'a') as file:
+            while True:
+                if self.duration is not None and time() - start >= self.duration:
+                    break
+                new = time_ns()
+                if new - old >= 10**8:
+                    old = new
+                    [job.job(str(new), file) for job in self.jobs]
         self.kill()
 
     def start(self) -> None:

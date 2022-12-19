@@ -37,13 +37,11 @@ class BaseWebsocket:
         """Переименование пар"""
         return tuple(map(lambda x: self.different_names.get(x, x), data))
 
-    def job(self, now_time: float, filename=None) -> None:
+    def job(self, now_time: float, file) -> None:
         """Запись данных в файл"""
-        path = filename if filename is not None else GLOBAL_OUTPUT_FILE_NAME
-        path = GLOBAL_OUTPUT_FOLDER + path
-        with open(path, mode="a") as file:
-            x = self.resent.copy().values()
-            [print('\t'.join(map(str, (now_time, *map(norm, e)))), file=file) for e in x]
+        x = self.resent.copy().values()
+        data = '\n'.join(['\t'.join((now_time, *map(norm, e))) for e in x])
+        file.write(data)
 
     def on_open(self, ws) -> None:
         """Открытие соединения"""
