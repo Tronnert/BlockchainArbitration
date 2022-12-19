@@ -14,10 +14,10 @@ class Scheduler:
         start = time()
         old = time_ns()
         while True:
-            if self.duration is not None and time() - start >= self.duration:
+            if self.duration is not None and time_ns() - start >= self.duration:
                 break
-            new = time_ns()
-            if new - old >= 10 ** 8:
+            new = time()
+            if new - old >= 10**8:
                 old = new
                 [job.job(new, self.filename) for job in self.jobs]
         self.kill()
