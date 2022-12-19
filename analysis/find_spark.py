@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.types import IntegerType, BooleanType, LongType, StructType, StructField, StringType, DoubleType
+from pyspark.sql.types import LongType, StructType, StructField, StringType, DoubleType
 import pyspark.sql.functions as f
 from pyspark.sql import Window
 import findspark
@@ -17,7 +17,7 @@ SCHEMA = StructType([
     StructField("askQty", DoubleType(), False),
 
 ])
-df = spark.read.options(delimiter='\t', ).csv("../logs7.tsv", header=False,
+df = spark.read.options(delimiter='\t', ).csv("../logs9.tsv", header=False,
                                               schema=SCHEMA)
 
 w = Window.partitionBy(['dt', "base", "quote"])
@@ -33,4 +33,5 @@ test = bids.join(asks, on=["dt", "base", "quote"])
 test = test.withColumn("Qty", f.least("bidQty", "askQty"))
 test = test.withColumn("revenue", (f.col("bidPrice") - f.col("askPrice")) * f.col("Qty"))
 test2 = test[test["revenue"] > 0]
-print(test2.show(10))
+print(test2.count())
+print(df.count())
