@@ -1,4 +1,4 @@
-GLOBAL_OUTPUT_FILE_NAME = "logs.tsv"
+GLOBAL_OUTPUT_FILE_NAME = "logs7.tsv"
 
 DIFFERENT_NAMES_FILE_NAME = "json/different_names.json"
 
