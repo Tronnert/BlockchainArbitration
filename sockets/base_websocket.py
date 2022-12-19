@@ -1,9 +1,8 @@
 import websocket
-from datetime import datetime
-from time import time_ns
 import threading
 import json
-from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME
+from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME, \
+    GLOBAL_OUTPUT_FOLDER
 from functions import stable_decimal_places as norm
 
 
@@ -15,6 +14,9 @@ class BaseWebsocket:
         self.subfilename = subfilename
         self.streamname = streamname
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
+        self.wsa = websocket.WebSocketApp(
+            self.streamname, on_message=self.on_message, on_open=self.on_open
+        )
         self.websocket_thread = threading.Thread(target=self.run_websocket)
         self.list_of_symbols = {}
 
@@ -35,9 +37,11 @@ class BaseWebsocket:
         """Переименование пар"""
         return tuple(map(lambda x: self.different_names.get(x, x), data))
 
-    def job(self, now_time: float) -> None:
+    def job(self, now_time: float, filename=None) -> None:
         """Запись данных в файл"""
-        with open(GLOBAL_OUTPUT_FILE_NAME, mode="a") as file:
+        path = filename if filename is not None else GLOBAL_OUTPUT_FILE_NAME
+        path = GLOBAL_OUTPUT_FOLDER + path
+        with open(path, mode="a") as file:
             x = self.resent.copy().values()
             [print('\t'.join(map(str, (now_time, *map(norm, e)))), file=file) for e in x]
 
@@ -59,7 +63,9 @@ class BaseWebsocket:
     def run_websocket(self) -> None:
         """Запуск сокета"""
         print(f"{self} START")
-        wsa = websocket.WebSocketApp(
-            self.streamname, on_message=self.on_message, on_open=self.on_open
-        )
-        wsa.run_forever()
+        self.wsa.run_forever()
+
+    def kill(self):
+        """Прекращение работы сокета"""
+        self.wsa.keep_running = False
+        self.websocket_thread.join()
