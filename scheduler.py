@@ -1,4 +1,5 @@
 from time import time_ns, time
+from datetime import datetime as dt
 import threading
 
 
@@ -13,10 +14,12 @@ class Scheduler:
     def run(self) -> None:
         start = time()
         old = time_ns()
+        #old = int(dt.utcnow().timestamp())
         while True:
-            if self.duration is not None and time_ns() - start >= self.duration:
+            if self.duration is not None and time() - start >= self.duration:
                 break
-            new = time()
+            new = time_ns()
+            #new = int(dt.utcnow().timestamp())
             if new - old >= 10**8:
                 old = new
                 [job.job(new, self.filename) for job in self.jobs]
