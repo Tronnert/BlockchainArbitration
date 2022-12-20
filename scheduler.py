@@ -1,7 +1,6 @@
 from time import time_ns, time
 from datetime import datetime as dt
 import threading
-import asyncio
 from consts import GLOBAL_OUTPUT_FILE_NAME, GLOBAL_OUTPUT_FOLDER
 
 

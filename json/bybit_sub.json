@@ -1,0 +1,6 @@
+{
+    "op": "subscribe",
+    "args": [
+        "orderbook.1.BTCUSDT"
+    ]
+}

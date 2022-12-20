@@ -34,3 +34,8 @@ GATES_IO_MAX_SYMBOLS = 300
 
 HUOBI_SYMBOLS = "https://api.huobi.pro/v2/settings/common/symbols"
 HUOBI_MAX_SYMBOLS = 300
+
+BYBIT_STREAM_NAME = "wss://stream.bybit.com/contract/usdt/public/v3"
+BYBIT_SUB_FILE = "json/bybit_sub.json"
+BYBIT_SYMBOLS = "https://api.bybit.com/derivatives/v3/public/instruments-info"
+BYBIT_TICKER = "https://api.bybit.com/derivatives/v3/public/tickers"

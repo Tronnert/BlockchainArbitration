@@ -39,14 +39,17 @@ class BaseWebsocket:
     def job(self, now_time: str, file) -> None:
         """Запись данных в файл"""
         x = self.resent.copy().values()
-        [print('\t'.join((now_time, *map(norm, e))), file=file) for e in x]
+        if not x:
+            return
+        data = '\n'.join(['\t'.join((now_time, *map(norm, e))) for e in x])
+        file.write(data + '\n')
 
     def on_open(self, ws) -> None:
         """Открытие соединения"""
         print(f"ON {self}")
         data = self.made_sub_json()
         data = [data] if not isinstance(data, list) else data
-        [ws.send(sub) for sub in map(json.dumps, data)]
+        [ws.send(sub.replace("'", '"')) for sub in map(json.dumps, data)]
 
     def on_message(self, ws, mess: str) -> None:
         """Получение данных"""
