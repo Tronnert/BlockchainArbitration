@@ -1,8 +1,7 @@
 import websocket
 import threading
 import json
-from consts import GLOBAL_OUTPUT_FILE_NAME, DIFFERENT_NAMES_FILE_NAME, \
-    GLOBAL_OUTPUT_FOLDER
+from consts import DIFFERENT_NAMES_FILE_NAME
 from functions import stable_decimal_places as norm
 
 
@@ -37,11 +36,10 @@ class BaseWebsocket:
         """Переименование пар"""
         return tuple(map(lambda x: self.different_names.get(x, x), data))
 
-    def job(self, now_time: float, file) -> None:
+    def job(self, now_time: str, file) -> None:
         """Запись данных в файл"""
         x = self.resent.copy().values()
-        data = '\n'.join(['\t'.join((now_time, *map(norm, e))) for e in x])
-        file.write(data)
+        [print('\t'.join((now_time, *map(norm, e))), file=file) for e in x]
 
     def on_open(self, ws) -> None:
         """Открытие соединения"""

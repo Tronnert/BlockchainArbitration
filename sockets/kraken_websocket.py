@@ -38,19 +38,20 @@ class KrakenWebsocket(BaseWebsocket):
                 cur1, cur2, "kraken", float(bids[0][0]), float(bids[0][1]),
                 float(asks[0][0]), float(asks[0][1])
             )
-        elif 'a' in message[1].keys():
-            asks = message[1]["a"]
-            if not asks:
-                asks = [[0, 0]]
-            self.resent[symb] = (
-                *self.resent[message[3]][:-1], float(asks[0][0]),
-                float(asks[0][1])
-            )
-        elif 'b' in message[1].keys():
-            bids = message[1]["b"]
-            if not bids:
-                bids = [[0, 0]]
-            self.resent[symb] = (
-                *self.resent[message[3]][:-2], float(bids[0][0]),
-                float(bids[0][1]), self.resent[message[3]][-1]
-            )
+        else:
+            if 'a' in message[1].keys():
+                asks = message[1]["a"]
+                if not asks:
+                    asks = [[0, 0]]
+                self.resent[symb] = (
+                    *self.resent[message[3]][:-1], float(asks[0][0]),
+                    float(asks[0][1])
+                )
+            if 'b' in message[1].keys():
+                bids = message[1]["b"]
+                if not bids:
+                    bids = [[0, 0]]
+                self.resent[symb] = (
+                    *self.resent[message[3]][:-2], float(bids[0][0]),
+                    float(bids[0][1]), self.resent[message[3]][-1]
+                )

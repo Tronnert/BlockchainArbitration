@@ -6,10 +6,9 @@ from sockets.gate_websocket import GateWebsocket
 from sockets.huobi_websocket import HuobiWebsocket
 
 if __name__ == "__main__":
-    # # open(GLOBAL_OUTPUT_FILE_NAME, mode="w").write("dt\tbase\tquote\texchange\tbidPrice\tbidQty\taskPrice\taskQty")
+    filename = "test_time3.tsv"
 
-    to_start = [BinanceWebsocket(), PoloniexWebsocket(), KrakenWebsocket(),
-                GateWebsocket(), HuobiWebsocket()]
+    to_start = [GateWebsocket()]
     [socket.start() for socket in to_start]
-    scheduler = Scheduler(*to_start, filename="test44.tsv")
+    scheduler = Scheduler(*to_start, filename=filename)
     scheduler.start()
