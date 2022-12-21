@@ -8,12 +8,12 @@ from sockets.bybit_websocket import BybitWebsocket
 from sockets.bitget_websocket import BitgetWebsocket
 
 if __name__ == "__main__":
-    filename = "test_krak.tsv"
+    filename = "test_bg.tsv"
 
     # to_start = [BinanceWebsocket(), BybitWebsocket(), BitgetWebsocket(),
     #             PoloniexWebsocket(), GateWebsocket(), HuobiWebsocket(),
     #             KrakenWebsocket()]
-    to_start = [KrakenWebsocket()]
+    to_start = [BitgetWebsocket()]
     [socket.start() for socket in to_start]
     scheduler = Scheduler(*to_start, filename=filename)
     scheduler.start()

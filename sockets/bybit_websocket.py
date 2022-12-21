@@ -34,21 +34,24 @@ class BybitWebsocket(BaseWebsocket):
         cur1, cur2 = self.list_of_symbols[message["s"]]
         # пришел снапшот, нужно загрузить данные
         if message["b"] and message["a"]:
+            bids, asks = message["b"], message["a"]
             self.resent[message["s"]] = (
-                cur1, cur2, "bybit", float(message["b"][0][0]),
-                float(message["b"][0][1]), float(message["a"][0][0]),
-                float(message["a"][0][1]), self.fee
+                cur1, cur2, "bybit", float(bids[0][0]),
+                float(bids[0][1]), float(asks[0][0]),
+                float(asks[0][1]), self.fee
             )
         else:  # данные надо обновить
             if message['b']:
+                bids = message["b"]
                 last_ask = self.resent[message["s"]][-2:]
                 self.resent[message["s"]] = (
-                    cur1, cur2, "bybit", float(message["b"][0][0]),
-                    float(message["b"][0][1]), *last_ask, self.fee
+                    cur1, cur2, "bybit", float(bids[0][0]),
+                    float(bids[0][1]), *last_ask, self.fee
                 )
             if message["a"]:
+                asks = message["a"]
                 last_bid = self.resent[message["a"]][3:5]
                 self.resent[message["s"]] = (
-                    cur1, cur2, "bybit", *last_bid, float(message["a"][0][0]),
-                    float(message["a"][0][1]), self.fee
+                    cur1, cur2, "bybit", *last_bid, float(asks[0][0]),
+                    float(asks[0][1]), self.fee
                 )
