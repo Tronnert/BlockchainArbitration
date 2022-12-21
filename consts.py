@@ -52,5 +52,5 @@ EXCHANGE_FEES = "json/exchange_fee.json"
 # from requests import get
 # from pprint import pprint
 #
-# resp = get("https://eapi.binance.com/eapi/v1/exchangeInfo").json()
-# pprint(resp)
+# resp = get("https://eapi.binance.com/eapi/v1/exchangeInfo").json()["optionSymbols"]
+# print({i["underlying"]: float(i["takerFeeRate"]) for i in resp})
