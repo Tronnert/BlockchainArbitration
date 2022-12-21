@@ -39,3 +39,10 @@ BYBIT_STREAM_NAME = "wss://stream.bybit.com/contract/usdt/public/v3"
 BYBIT_SUB_FILE = "json/bybit_sub.json"
 BYBIT_SYMBOLS = "https://api.bybit.com/derivatives/v3/public/instruments-info"
 BYBIT_TICKER = "https://api.bybit.com/derivatives/v3/public/tickers"
+
+
+BITGET_STREAM_NAME = "wss://ws.bitget.com/spot/v1/stream"
+BITGET_SUB_FILE = "json/bitget_sub.json"
+BITGET_SYMBOLS = "https://api.bitget.com/api/spot/v1/public/products"
+BITGET_TICKER = "https://api.bitget.com/api/spot/v1/market/tickers"
+BITGET_MAX_SYMBOLS = 300
