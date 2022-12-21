@@ -37,15 +37,15 @@ class BitgetWebsocket(BaseWebsocket):
         best_bid = self.get_first_not_null(asks)
         best_ask = self.get_first_not_null(bids)
         if message["action"] == "snapshot":  # новые данные
-            self.resent[symb] = (cur1, cur2, "bitget", *best_bid, *best_ask, fee)
+            self.resent[symb] = (cur1, cur2, "bitget", *best_bid, fee, *best_ask, fee)
         else:  # обновление данных
             # если последнего ордера на покупку или продажу нет, надо взять
             # следующий ордер, иначе взять минимльный/максимальный из текущего и нового)
             ask = self.resent[3]
             ask = best_ask if self.get_by_price(ask, asks) == 0 else min(ask, best_ask, key=lambda x: x[0])
-            bid = self.resent[5]
+            bid = self.resent[6]
             bid = best_bid if self.get_by_price(bid, bids) == 0 else max(bid, best_bid, key=lambda x: x[0])
-            self.resent[symb] = (cur1, cur2, "bidget", *bid, *ask, fee)
+            self.resent[symb] = (cur1, cur2, "bidget", *bid, fee, *ask, fee)
 
     @staticmethod
     def get_first_not_null(data) -> tuple[float, float]:

@@ -43,7 +43,7 @@ class GateWebsocket(BaseWebsocket):
             return
         cur1, cur2, fee = self.list_of_symbols[message["s"]]
         self.resent[message['s']] = (
-            cur1, cur2, "gate", float(message["b"]), float(message["B"]),
+            cur1, cur2, "gate", float(message["b"]), float(message["B"]), fee,
             float(message["a"]), float(message["A"]), fee
         )
 

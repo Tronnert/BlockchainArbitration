@@ -37,7 +37,7 @@ class BybitWebsocket(BaseWebsocket):
             bids, asks = message["b"], message["a"]
             self.resent[message["s"]] = (
                 cur1, cur2, "bybit", float(bids[0][0]),
-                float(bids[0][1]), float(asks[0][0]),
+                float(bids[0][1]), self.fee, float(asks[0][0]),
                 float(asks[0][1]), self.fee
             )
         else:  # данные надо обновить
@@ -46,12 +46,12 @@ class BybitWebsocket(BaseWebsocket):
                 last_ask = self.resent[message["s"]][-2:]
                 self.resent[message["s"]] = (
                     cur1, cur2, "bybit", float(bids[0][0]),
-                    float(bids[0][1]), *last_ask, self.fee
+                    float(bids[0][1]), self.fee, *last_ask, self.fee
                 )
             if message["a"]:
                 asks = message["a"]
                 last_bid = self.resent[message["a"]][3:5]
                 self.resent[message["s"]] = (
-                    cur1, cur2, "bybit", *last_bid, float(asks[0][0]),
+                    cur1, cur2, "bybit", *last_bid, self.fee, float(asks[0][0]),
                     float(asks[0][1]), self.fee
                 )

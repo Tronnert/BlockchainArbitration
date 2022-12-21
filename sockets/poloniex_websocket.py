@@ -55,5 +55,5 @@ class PoloniexWebsocket(BaseWebsocket):
         ask = [0, 0] if not message["asks"] else [float(message["asks"][0][0]), float(message["asks"][0][1])]
         bid = [0, 0] if not message["bids"] else [float(message["bids"][0][0]), float(message["bids"][0][1])]
         self.resent[message["symbol"]] = (
-            cur1, cur2, "poloniex", *bid, *ask, self.fee
+            cur1, cur2, "poloniex", *bid, self.fee, *ask, self.fee
         )

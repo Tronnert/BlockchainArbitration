@@ -46,7 +46,7 @@ class BinanceWebsocket(BaseWebsocket):
         cur1, cur2, fee = self.list_of_symbols[symb]
         self.resent[symb] = (
             cur1, cur2, "binance", float(message["b"]),
-            float(message["B"]), float(message["a"]), float(message["A"]),
+            float(message["B"]), fee, float(message["a"]), float(message["A"]),
             fee
 
         )
