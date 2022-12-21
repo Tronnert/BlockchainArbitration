@@ -22,12 +22,14 @@ class BybitWebsocket(BaseWebsocket):
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
         sub_json = super().made_sub_json()
-        sub_json["args"] = list(map(lambda x: "orderbook.1." + "".join(x),
-                                    self.list_of_symbols.values()))
+        sub_json["args"] = list(map(lambda x: "orderbook.1." + str(x),
+                                    self.list_of_symbols.keys()))
         return sub_json
 
     def process(self, message: dict) -> None:
         """Обработка данных"""
+        if "data" not in message:
+            return
         message = message["data"]
         cur1, cur2 = self.list_of_symbols[message["s"]]
         # пришел снапшот, нужно загрузить данные
@@ -35,18 +37,18 @@ class BybitWebsocket(BaseWebsocket):
             self.resent[message["s"]] = (
                 cur1, cur2, "bybit", float(message["b"][0][0]),
                 float(message["b"][0][1]), float(message["a"][0][0]),
-                float(message["a"][0][1])
+                float(message["a"][0][1]), self.fee
             )
         else:  # данные надо обновить
             if message['b']:
                 last_ask = self.resent[message["s"]][-2:]
                 self.resent[message["s"]] = (
                     cur1, cur2, "bybit", float(message["b"][0][0]),
-                    float(message["b"][0][1]), *last_ask
+                    float(message["b"][0][1]), *last_ask, self.fee
                 )
             if message["a"]:
                 last_bid = self.resent[message["a"]][3:5]
                 self.resent[message["s"]] = (
                     cur1, cur2, "bybit", *last_bid, float(message["a"][0][0]),
-                    float(message["a"][0][1])
+                    float(message["a"][0][1]), self.fee
                 )

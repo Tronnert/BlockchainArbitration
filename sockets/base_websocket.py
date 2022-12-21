@@ -1,7 +1,7 @@
 import websocket
 import threading
 import json
-from consts import DIFFERENT_NAMES_FILE_NAME
+from consts import DIFFERENT_NAMES_FILE_NAME, EXCHANGE_FEES
 from functions import stable_decimal_places as norm
 
 
@@ -12,6 +12,7 @@ class BaseWebsocket:
         self.resent = {}
         self.subfilename = subfilename
         self.streamname = streamname
+        self.fee = json.load(open(EXCHANGE_FEES)).get(str(self), None)
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
         self.wsa = websocket.WebSocketApp(
             self.streamname, on_message=self.on_message, on_open=self.on_open

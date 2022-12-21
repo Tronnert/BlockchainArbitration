@@ -46,3 +46,5 @@ BITGET_SUB_FILE = "json/bitget_sub.json"
 BITGET_SYMBOLS = "https://api.bitget.com/api/spot/v1/public/products"
 BITGET_TICKER = "https://api.bitget.com/api/spot/v1/market/tickers"
 BITGET_MAX_SYMBOLS = 300
+
+EXCHANGE_FEES = "json/exchange_fee.json"
