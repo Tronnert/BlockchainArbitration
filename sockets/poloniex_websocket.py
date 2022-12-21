@@ -6,6 +6,7 @@ import hashlib
 from requests import get
 from time import time
 import base64
+import json
 
 
 class PoloniexWebsocket(BaseWebsocket):
@@ -14,6 +15,14 @@ class PoloniexWebsocket(BaseWebsocket):
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
         self.fee = self.get_fee()
         self.list_of_symbols = self.get_top_pairs(POLONIEX_MAX_SYMBOLS)
+        self.get_withdrawal_fee('BTC')
+
+    @staticmethod
+    def get_withdrawal_fee(currency) -> float:
+        link = f'https://api.poloniex.com/currencies/{currency}'
+        return float(get(link).json()[currency]['withdrawalFee'])
+
+
 
     @staticmethod
     def get_fee() -> float:
@@ -55,5 +64,5 @@ class PoloniexWebsocket(BaseWebsocket):
         ask = [0, 0] if not message["asks"] else [float(message["asks"][0][0]), float(message["asks"][0][1])]
         bid = [0, 0] if not message["bids"] else [float(message["bids"][0][0]), float(message["bids"][0][1])]
         self.resent[message["symbol"]] = (
-            cur1, cur2, "poloniex", *bid, self.fee, *ask, self.fee
+            cur1, cur2, self.get_withdrawal_fee(cur1), self.get_withdrawal_fee(cur2), "poloniex", *bid, self.fee, *ask, self.fee
         )
