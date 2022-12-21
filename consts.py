@@ -26,6 +26,7 @@ BINANCE_STEP = 50
 
 POLONIEX_TICKER = "https://api.poloniex.com/markets/ticker24h"
 POLONIEX_MAX_SYMBOLS = 300
+POLONIEX_FEE = "https://api.poloniex.com/feeinfo"
 
 KRAKEN_SYMBOLS = "https://api.kraken.com/0/public/AssetPairs"
 
@@ -49,8 +50,5 @@ BITGET_TICKER = "https://api.bitget.com/api/spot/v1/market/tickers"
 BITGET_MAX_SYMBOLS = 300
 
 EXCHANGE_FEES = "json/exchange_fee.json"
-# from requests import get
-# from pprint import pprint
-#
-# resp = get("https://eapi.binance.com/eapi/v1/exchangeInfo").json()["optionSymbols"]
-# print({i["underlying"]: float(i["takerFeeRate"]) for i in resp})
+API_KEY = "B8WVMV3P-QTP4WLNS-Z2GFN0Q6-R3QDOIE2"
+API_SECRET = "dc61220eb0f4ab98e8531b35d39efa65c66ec93cc48a18e740df7ed0a9e402a908de7085b14182761002e2366cd027e6ef15b2e2750e1dde337a34c2e1c5dae4"

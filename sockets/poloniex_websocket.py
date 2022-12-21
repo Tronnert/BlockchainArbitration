@@ -1,14 +1,39 @@
 from consts import POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, POLONIEX_MAX_SYMBOLS, \
-    POLONIEX_TICKER
+    POLONIEX_TICKER, POLONIEX_FEE, API_KEY, API_SECRET
 from sockets.base_websocket import BaseWebsocket
+import hmac
+import hashlib
 from requests import get
+from time import time
+import base64
 
 
 class PoloniexWebsocket(BaseWebsocket):
     """Сокет для Poloniex"""
     def __init__(self, *args) -> None:
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
+        self.fee = self.get_fee()
         self.list_of_symbols = self.get_top_pairs(POLONIEX_MAX_SYMBOLS)
+
+    @staticmethod
+    def get_fee() -> float:
+        try:
+            # авторизация
+            stamp = int(time() * 10 ** 6 // 1000)
+            message = f"GET\n/feeinfo\nsignTimestamp={stamp}"
+            signature = base64.b64encode(
+                hmac.new(bytes(API_SECRET, 'utf-8'), msg=bytes(message, 'utf-8'),
+                         digestmod=hashlib.sha256).digest()).decode()
+            header = {"signatureMethod": "HmacSHA256", "signatureVersion": "2",
+                      "signTimestamp": str(stamp),
+                      "key": API_KEY,
+                      "signature": signature}
+            resp = get(POLONIEX_FEE, headers=header)
+            if resp.status_code != 200:
+                raise TypeError
+            return resp.json()["takerRate"]
+        except TypeError:
+            return 1
 
     def get_top_pairs(self, top: int) -> dict:
         ticker24 = sorted(get(POLONIEX_TICKER).json(),
@@ -30,5 +55,5 @@ class PoloniexWebsocket(BaseWebsocket):
         self.resent[message["symbol"]] = (
             cur1, cur2, "poloniex", float(message["bids"][0][0]),
             float(message["bids"][0][1]), float(message["asks"][0][0]),
-            float(message["asks"][0][1])
+            float(message["asks"][0][1]), self.fee
         )
