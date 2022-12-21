@@ -1,4 +1,5 @@
 {
   "BybitWebsocket": 0.001,
-  "BinanceWebsocket": 0.001
+  "BinanceWebsocket": 0.001,
+  "HuobiWebsocket": 0.002
 }

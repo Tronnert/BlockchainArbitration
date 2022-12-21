@@ -40,7 +40,7 @@ class HuobiWebsocket(BaseWebsocket):
         self.resent[message["symbol"]] = (
             *self.list_of_symbols[message["symbol"].upper()], "huobi",
             float(message["bid"]), float(message["bidSize"]),
-            float(message["ask"]), float(message["askSize"])
+            float(message["ask"]), float(message["askSize"]), self.fee
         )
 
     def on_message(self, ws, mess):
