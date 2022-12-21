@@ -5,6 +5,7 @@ DIFFERENT_NAMES_FILE_NAME = "json/different_names.json"
 
 BINANCE_SUB_FILE = "json/binance_sub.json"
 BINANCE_STREAM_NAME = "wss://stream.binance.com:9443/ws/tronnert_stream"
+BINANCE_FEES = "https://eapi.binance.com/eapi/v1/exchangeInfo"
 
 POLONIEX_SUB_FILE = "json/poloniex_sub.json"
 POLONIEX_STREAM_NAME = "wss://ws.poloniex.com/ws/public"
@@ -48,3 +49,8 @@ BITGET_TICKER = "https://api.bitget.com/api/spot/v1/market/tickers"
 BITGET_MAX_SYMBOLS = 300
 
 EXCHANGE_FEES = "json/exchange_fee.json"
+# from requests import get
+# from pprint import pprint
+#
+# resp = get("https://eapi.binance.com/eapi/v1/exchangeInfo").json()
+# pprint(resp)
