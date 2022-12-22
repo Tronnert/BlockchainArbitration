@@ -8,6 +8,7 @@ class BybitWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(BYBIT_SUB_FILE, BYBIT_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs()
+        self.add_pattern_to_resent()
 
     @staticmethod
     def get_top_pairs():
@@ -35,23 +36,20 @@ class BybitWebsocket(BaseWebsocket):
         # пришел снапшот, нужно загрузить данные
         if message["b"] and message["a"]:
             bids, asks = message["b"], message["a"]
-            self.resent[message["s"]] = (
-                cur1, cur2, "bybit", float(bids[0][0]),
-                float(bids[0][1]), self.fee, float(asks[0][0]),
-                float(asks[0][1]), self.fee
+            self.update_resent(
+                message["s"], base=cur1, quote=cur2, exchange="bybit",
+                takerFee=self.fee, bidPrice=float(bids[0][0]),
+                bidQty=float(bids[0][1]), askPrice=float(asks[0][0]),
+                askQty=float(asks[0][1])
             )
         else:  # данные надо обновить
             if message['b']:
                 bids = message["b"]
-                last_ask = self.resent[message["s"]][-2:]
-                self.resent[message["s"]] = (
-                    cur1, cur2, "bybit", float(bids[0][0]),
-                    float(bids[0][1]), self.fee, *last_ask, self.fee
+                self.update_resent(
+                    message["s"], bidPrice=float(bids[0][0]), bidQty=float(bids[0][1])
                 )
             if message["a"]:
                 asks = message["a"]
-                last_bid = self.resent[message["a"]][3:5]
-                self.resent[message["s"]] = (
-                    cur1, cur2, "bybit", *last_bid, self.fee, float(asks[0][0]),
-                    float(asks[0][1]), self.fee
+                self.update_resent(
+                    message["s"], askPrice=float(asks[0][0]), askQty=float(asks[0][1])
                 )
