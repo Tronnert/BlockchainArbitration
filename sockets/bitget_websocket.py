@@ -35,8 +35,8 @@ class BitgetWebsocket(BaseWebsocket):
         cur1, cur2, fee = self.list_of_symbols[symb]
         asks = map(lambda x: (float(x[0]), float(x[1])), message["data"][0]["asks"])
         bids = map(lambda x: (float(x[0]), float(x[1])), message["data"][0]["bids"])
-        best_bid = self.get_first_not_null(asks)
-        best_ask = self.get_first_not_null(bids)
+        best_bid = self.get_first_not_null(bids)
+        best_ask = self.get_first_not_null(asks)
         if message["action"] == "snapshot":  # новые данные
             self.update_resent(
                 symb, base=cur1, quote=cur2, exchange="bitget",
