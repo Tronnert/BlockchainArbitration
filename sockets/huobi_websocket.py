@@ -49,4 +49,4 @@ class HuobiWebsocket(BaseWebsocket):
 
     def on_message(self, ws, mess):
         """Получение данных"""
-        self.process(json.loads(gzip.decompress(mess)))
+        self.process(json.loads(gzip.decompress(bytes(mess))))

@@ -16,10 +16,11 @@ class BaseWebsocket:
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
         self.wsa = websocket.WebSocketApp(
             self.streamname, on_message=self.on_message, on_open=self.on_open,
-            on_error=lambda x, y: self.excepthook(x, y)
+            on_error=lambda x, y: self.excepthook(x, y), on_close=self.run_websocket
         )
         self.websocket_thread = threading.Thread(target=self.run_websocket)
         self.list_of_symbols = {}
+
 
     def excepthook(self, _, msg):
         print(f"An error occuried in {self} due to {msg}")
