@@ -39,7 +39,7 @@ class KrakenWebsocket(BaseWebsocket):
         """Обработка данных"""
         if isinstance(message, dict):
             return
-        symb = message[3]
+        symb = message[-1]
         cur1, cur2 = self.list_of_symbols[symb][:-1]
         if 'as' in message[1].keys():
             bids, asks = message[1]["bs"], message[1]["as"]
@@ -55,16 +55,18 @@ class KrakenWebsocket(BaseWebsocket):
                 askFee=self.define_fee(symb, float(asks[0][1]))
             )
         else:
-            if 'a' in message[1].keys():
-                asks = message[1]["a"]
+            v1, v2 = message[1], message[2]
+            data = v1 | v2 if isinstance(v2, dict) else v1
+            if 'a' in data.keys():
+                asks = data["a"]
                 if not asks:
                     asks = [[0, 0]]
                 self.update_resent(
                     symb, askPrice=float(asks[0][0]), askQty=float(asks[0][1]),
                     askFee=self.define_fee(symb, float(asks[0][1]))
                 )
-            if 'b' in message[1].keys():
-                bids = message[1]["b"]
+            if 'b' in data.keys():
+                bids = data["b"]
                 if not bids:
                     bids = [[0, 0]]
                 self.update_resent(
