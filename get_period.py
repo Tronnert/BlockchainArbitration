@@ -17,13 +17,14 @@ parser.add_argument('--progress_bar', action=BooleanOptionalAction)
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    progress = False if args.progress_bar is None else True
     event = threading.Event()
     to_start = [BinanceWebsocket(), PoloniexWebsocket(), KrakenWebsocket(),
                 GateWebsocket(), HuobiWebsocket(), BybitWebsocket(),
                 BitgetWebsocket()]
     [socket.start() for socket in to_start]
     scheduler = Scheduler(*to_start, duration=args.duration, event=event,
-                          filename=args.filename)
+                          filename=args.filename, progress=progress)
     scheduler.start()
     scheduler.schedule_thread.join(args.duration)
     event.set()

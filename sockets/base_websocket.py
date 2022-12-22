@@ -11,6 +11,7 @@ class BaseWebsocket:
     def __init__(self, subfilename: str, streamname: str) -> None:
         self.resent = {}
         self.subfilename = subfilename
+        self.echo = True
         self.streamname = streamname
         self.fee = json.load(open(EXCHANGE_FEES)).get(str(self), None)
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
@@ -21,9 +22,12 @@ class BaseWebsocket:
         self.websocket_thread = threading.Thread(target=self.run_websocket)
         self.list_of_symbols = {}
 
+    def set_echo(self, val):
+        self.echo = val
 
     def excepthook(self, _, msg):
-        print(f"An error occuried in {self} due to {msg}")
+        if self.echo:
+            print(f"An error occuried in {self} due to {msg}")
 
     def __repr__(self):
         return self.__class__.__name__
@@ -79,7 +83,8 @@ class BaseWebsocket:
 
     def on_open(self, ws) -> None:
         """Открытие соединения"""
-        print(f"ON {self}")
+        if self.echo:
+            print(f"ON {self}")
         data = self.made_sub_json()
         data = [data] if not isinstance(data, list) else data
         [ws.send(sub.replace("'", '"')) for sub in map(json.dumps, data)]
@@ -94,7 +99,8 @@ class BaseWebsocket:
 
     def run_websocket(self, *args) -> None:
         """Запуск сокета"""
-        print(f"{self} START")
+        if self.echo:
+            print(f"{self} START")
         self.wsa.run_forever()
 
     def kill(self):
@@ -104,4 +110,5 @@ class BaseWebsocket:
         self.websocket_thread.join()
 
     def close(self, *args):
-        print(f"{self} CLOSED")
+        if self.echo:
+            print(f"{self} CLOSED")

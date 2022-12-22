@@ -6,9 +6,11 @@ from functions import printProgressBar
 
 
 class Scheduler:
-    def __init__(self, *args, duration=None, event=None, filename=None) -> None:
+    def __init__(self, *args, duration=None, event=None, filename=None, progress=False) -> None:
         self.duration = duration
         self.jobs = args
+        self.progress = progress
+        [job.set_echo(not progress) for job in self.jobs]
         self.event = event
         self.filename = filename
         self.schedule_thread = threading.Thread(target=self.run)
@@ -20,11 +22,11 @@ class Scheduler:
         path = GLOBAL_OUTPUT_FOLDER + path
         with open(path, 'a') as file:
             while True:
-                if self.duration is not None:
-                    tm = time()
+                tm = time()
+                if self.duration is not None and tm - start >= self.duration:
+                    break
+                if self.duration is not None and self.progress:
                     printProgressBar(tm - start, self.duration)
-                    if tm - start >= self.duration:
-                        break
                 new = time_ns()
                 if new - old >= 10**8:
                     old = new
