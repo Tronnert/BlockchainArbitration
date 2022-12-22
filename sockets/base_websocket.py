@@ -31,7 +31,7 @@ class BaseWebsocket:
         """Возвращает набор столбцов создаваемого датасета"""
         return ["base", "quote", "baseWithdrawalFee", "baseWithdrawalFeeType",
                 "askWithdrawalFee", "askWithdrawalFeeType", "exchange",
-                "bidPrice", "bidQty", "bidFee", "askPrice", "askQty", "askFee"]
+                "bidPrice", "bidQty", "askPrice", "askQty", "takerFee"]
 
     def add_pattern_to_resent(self):
         """Добавляет в resent словари с ключами - столбцами датасета"""

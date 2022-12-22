@@ -15,7 +15,7 @@ class PoloniexWebsocket(BaseWebsocket):
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
         self.fee = self.get_fee()
         self.list_of_symbols = self.get_top_pairs(POLONIEX_MAX_SYMBOLS)
-        self.get_withdrawal_fee('BTC')
+        self.add_pattern_to_resent()
 
     @staticmethod
     def get_withdrawal_fee(currency) -> tuple[float, str]:
@@ -51,16 +51,25 @@ class PoloniexWebsocket(BaseWebsocket):
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
         sub_json = super().made_sub_json()
-        sub_json["symbols"] = list(map(lambda x: "_".join(x),
-                                       self.list_of_symbols.values()))
+        sub_json["symbols"] = list(self.list_of_symbols.keys())
+        # sub_json["symbols"] = list(map(lambda x: "_".join(x),
+        #                                self.list_of_symbols.values()))
         return sub_json
 
     def process(self, message: dict) -> None:
         """Обработка данных"""
         message = message["data"][0]
         cur1, cur2 = message["symbol"].split('_')
+        fee1, fee2 = self.get_withdrawal_fee(cur1), self.get_withdrawal_fee(cur2)
         ask = [0, 0] if not message["asks"] else [float(message["asks"][0][0]), float(message["asks"][0][1])]
         bid = [0, 0] if not message["bids"] else [float(message["bids"][0][0]), float(message["bids"][0][1])]
-        self.resent[message["symbol"]] = (
-            cur1, cur2, *self.get_withdrawal_fee(cur1), *self.get_withdrawal_fee(cur2), "poloniex", *bid, self.fee, *ask, self.fee
+        self.update_resent(
+            message["symbol"], base=cur1, quote=cur2, exchange="poloniex",
+            baseWithdrawalFee=fee1[0], baseWithdrawalFeeType=fee1[1],
+            askWithdrawalFee=fee2[0], askWithdrawalFeeType=fee2[1],
+            bidPrice=bid[0], bidQty=bid[1],
+            askPrice=ask[0], askQty=ask[1], takerFee=self.fee
+
+
         )
+        #print(self.resent[message["symbol"]])
