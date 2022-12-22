@@ -41,7 +41,7 @@ class HuobiWebsocket(BaseWebsocket):
         symb = message["symbol"].upper()
         cur1, cur2 = self.list_of_symbols[symb]
         self.update_resent(
-            symb, base=cur1, quote=cur2, takerFee=self.fee,
+            symb, base=cur1, quote=cur2, bidFee=self.fee, askFee=self.fee,
             bidPrice=float(message["bid"]), bidQty=float(message["bidSize"]),
             askPrice=float(message["ask"]), askQty=float(message["askSize"]),
             exchange="huobi"

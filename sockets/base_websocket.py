@@ -22,7 +22,7 @@ class BaseWebsocket:
         self.list_of_symbols = {}
 
     def excepthook(self, _, msg):
-        print(f"An error occuried in {self} dur to {msg}")
+        print(f"An error occuried in {self} due to {msg}")
 
     def __repr__(self):
         return self.__class__.__name__
@@ -35,7 +35,8 @@ class BaseWebsocket:
         """Возвращает набор столбцов создаваемого датасета"""
         return ["base", "quote", "baseWithdrawalFee", "baseWithdrawalFeeType",
                 "quoteWithdrawalFee", "quoteWithdrawalFeeType", "exchange",
-                "bidPrice", "bidQty", "askPrice", "askQty", "takerFee"]
+                "bidPrice", "bidQty", "bidFee", "askPrice", "askQty", "askFee"
+                ]
 
     def add_pattern_to_resent(self):
         """Добавляет в resent словари с ключами - столбцами датасета"""

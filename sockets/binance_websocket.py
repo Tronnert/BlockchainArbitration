@@ -51,5 +51,5 @@ class BinanceWebsocket(BaseWebsocket):
             symb, base=cur1, quote=cur2, exchange="binance",
             bidPrice=float(message["b"]), bidQty=float(message["B"]),
             askPrice=float(message["a"]), askQty=float(message["A"]),
-            takerFee=fee
+            bidFee=fee, askFee=fee
         )

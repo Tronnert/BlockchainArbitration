@@ -38,9 +38,9 @@ class BybitWebsocket(BaseWebsocket):
             bids, asks = message["b"], message["a"]
             self.update_resent(
                 message["s"], base=cur1, quote=cur2, exchange="bybit",
-                takerFee=self.fee, bidPrice=float(bids[0][0]),
+                bidFee=self.fee, bidPrice=float(bids[0][0]),
                 bidQty=float(bids[0][1]), askPrice=float(asks[0][0]),
-                askQty=float(asks[0][1])
+                askQty=float(asks[0][1]), askFee=self.fee
             )
         else:  # данные надо обновить
             if message['b']:

@@ -51,7 +51,8 @@ class KrakenWebsocket(BaseWebsocket):
                 symb, base=cur1, quote=cur2, exchange="kraken",
                 bidPrice=float(bids[0][0]), bidQty=float(bids[0][1]),
                 askPrice=float(asks[0][0]), askQty=float(asks[0][1]),
-                takerFee=self.define_fee(symb, min(float(asks[0][1]), float(bids[0][1])))
+                bidFee=self.define_fee(symb, float(bids[0][1])),
+                askFee=self.define_fee(symb, float(asks[0][1]))
             )
         else:
             if 'a' in message[1].keys():
@@ -60,7 +61,7 @@ class KrakenWebsocket(BaseWebsocket):
                     asks = [[0, 0]]
                 self.update_resent(
                     symb, askPrice=float(asks[0][0]), askQty=float(asks[0][1]),
-                    takerFee=self.define_fee(symb, min(float(asks[0][1]), self.resent[symb]["bidQty"]))
+                    askFee=self.define_fee(symb, float(asks[0][1]))
                 )
             if 'b' in message[1].keys():
                 bids = message[1]["b"]
@@ -68,5 +69,5 @@ class KrakenWebsocket(BaseWebsocket):
                     bids = [[0, 0]]
                 self.update_resent(
                     symb, bidPrice=float(bids[0][0]), bidQty=float(bids[0][1]),
-                    takerFee=self.define_fee(symb, min(float(bids[0][1]), self.resent[symb]["askQty"]))
+                    bidFee=self.define_fee(symb, float(bids[0][1]))
                 )
