@@ -10,6 +10,7 @@ class GateWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(GATES_IO_MAX_SYMBOLS)
+        self.add_pattern_to_resent()
 
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
@@ -42,8 +43,9 @@ class GateWebsocket(BaseWebsocket):
         if 's' not in message.keys():
             return
         cur1, cur2, fee = self.list_of_symbols[message["s"]]
-        self.resent[message['s']] = (
-            cur1, cur2, "gate", float(message["b"]), float(message["B"]), fee,
-            float(message["a"]), float(message["A"]), fee
+        self.update_resent(
+            message["s"], base=cur1, quote=cur2, exchange="gate",
+            takerFee=fee, bidPrice=float(message["b"]),
+            bidQty=float(message["B"]), askPrice=float(message["a"]),
+            askQty=float(message["A"])
         )
-

@@ -66,7 +66,7 @@ class PoloniexWebsocket(BaseWebsocket):
         self.update_resent(
             message["symbol"], base=cur1, quote=cur2, exchange="poloniex",
             baseWithdrawalFee=fee1[0], baseWithdrawalFeeType=fee1[1],
-            askWithdrawalFee=fee2[0], askWithdrawalFeeType=fee2[1],
+            quoteWithdrawalFee=fee2[0], quoteWithdrawalFeeType=fee2[1],
             bidPrice=bid[0], bidQty=bid[1],
             askPrice=ask[0], askQty=ask[1], takerFee=self.fee
 

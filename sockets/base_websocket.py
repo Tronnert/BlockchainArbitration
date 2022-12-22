@@ -30,7 +30,7 @@ class BaseWebsocket:
     def get_pattern():
         """Возвращает набор столбцов создаваемого датасета"""
         return ["base", "quote", "baseWithdrawalFee", "baseWithdrawalFeeType",
-                "askWithdrawalFee", "askWithdrawalFeeType", "exchange",
+                "quoteWithdrawalFee", "quoteWithdrawalFeeType", "exchange",
                 "bidPrice", "bidQty", "askPrice", "askQty", "takerFee"]
 
     def add_pattern_to_resent(self):
