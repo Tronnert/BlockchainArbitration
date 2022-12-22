@@ -2,6 +2,7 @@ from time import time_ns, time
 from datetime import datetime as dt
 import threading
 from consts import GLOBAL_OUTPUT_FILE_NAME, GLOBAL_OUTPUT_FOLDER
+from functions import printProgressBar
 
 
 class Scheduler:
@@ -19,8 +20,11 @@ class Scheduler:
         path = GLOBAL_OUTPUT_FOLDER + path
         with open(path, 'a') as file:
             while True:
-                if self.duration is not None and time() - start >= self.duration:
-                    break
+                if self.duration is not None:
+                    tm = time()
+                    printProgressBar(tm - start, self.duration)
+                    if tm - start >= self.duration:
+                        break
                 new = time_ns()
                 if new - old >= 10**8:
                     old = new

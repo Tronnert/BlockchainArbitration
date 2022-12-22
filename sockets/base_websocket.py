@@ -100,4 +100,8 @@ class BaseWebsocket:
     def kill(self):
         """Прекращение работы сокета"""
         self.wsa.keep_running = False
+        self.wsa.on_close = self.close
         self.websocket_thread.join()
+
+    def close(self, *args):
+        print(f"{self} CLOSED")

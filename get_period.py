@@ -6,12 +6,13 @@ from sockets.gate_websocket import GateWebsocket
 from sockets.huobi_websocket import HuobiWebsocket
 from sockets.bybit_websocket import BybitWebsocket
 from sockets.bitget_websocket import BitgetWebsocket
-from argparse import ArgumentParser
+from argparse import ArgumentParser, BooleanOptionalAction
 import threading
 
 parser = ArgumentParser("Получение исторических данных за промежуток времени")
 parser.add_argument("--duration", type=int, default=60, nargs='?')
 parser.add_argument("--filename", default="logs.tsv", nargs="?")
+parser.add_argument('--progress_bar', action=BooleanOptionalAction)
 
 
 if __name__ == '__main__':
