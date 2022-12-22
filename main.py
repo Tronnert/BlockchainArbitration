@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # to_start = [BinanceWebsocket(), BybitWebsocket(), BitgetWebsocket(),
     #             PoloniexWebsocket(), GateWebsocket(), HuobiWebsocket(),
     #             KrakenWebsocket()]
-    to_start = [BybitWebsocket()]
+    to_start = [BitgetWebsocket()]
     [socket.start() for socket in to_start]
     scheduler = Scheduler(*to_start, filename=filename)
     scheduler.start()

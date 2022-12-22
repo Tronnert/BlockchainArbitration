@@ -9,6 +9,7 @@ class BitgetWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(BITGET_SUB_FILE, BITGET_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(BITGET_MAX_SYMBOLS)
+        self.add_pattern_to_resent()
 
     @staticmethod
     def get_top_pairs(top: int) -> dict:
@@ -37,7 +38,12 @@ class BitgetWebsocket(BaseWebsocket):
         best_bid = self.get_first_not_null(asks)
         best_ask = self.get_first_not_null(bids)
         if message["action"] == "snapshot":  # новые данные
-            self.resent[symb] = (cur1, cur2, "bitget", *best_bid, fee, *best_ask, fee)
+            self.update_resent(
+                symb, base=cur1, quote=cur2, exchange="bitget", takerFee=fee,
+                bidPrice=best_bid[0], bidQty=best_bid[1], askPrice=best_ask[0],
+                askQty=best_ask[1]
+            )
+            # self.resent[symb] = (cur1, cur2, "bitget", *best_bid, fee, *best_ask, fee)
         else:  # обновление данных
             # если последнего ордера на покупку или продажу нет, надо взять
             # следующий ордер, иначе взять минимльный/максимальный из текущего и нового)
@@ -45,7 +51,10 @@ class BitgetWebsocket(BaseWebsocket):
             ask = best_ask if self.get_by_price(ask, asks) == 0 else min(ask, best_ask, key=lambda x: x[0])
             bid = self.resent[6]
             bid = best_bid if self.get_by_price(bid, bids) == 0 else max(bid, best_bid, key=lambda x: x[0])
-            self.resent[symb] = (cur1, cur2, "bidget", *bid, fee, *ask, fee)
+            self.update_resent(
+                symb, base=cur1, quote=cur2, exchange="bitget", takerFee=fee,
+                bidPrice=bid[0], bidQty=bid[1], askPrice=ask[0], askQty=ask[1]
+            )
 
     @staticmethod
     def get_first_not_null(data) -> tuple[float, float]:
