@@ -15,6 +15,7 @@ class PoloniexWebsocket(BaseWebsocket):
         super().__init__(POLONIEX_SUB_FILE, POLONIEX_STREAM_NAME, *args)
         self.fee = self.get_fee()
         self.list_of_symbols = self.get_top_pairs(POLONIEX_MAX_SYMBOLS)
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     @staticmethod
@@ -61,6 +62,8 @@ class PoloniexWebsocket(BaseWebsocket):
         if "data" not in message:
             return
         message = message["data"][0]
+        if message["symbol"] not in self.list_of_symbols:
+            return
         cur1, cur2 = message["symbol"].split('_')
         fee1, fee2 = self.get_withdrawal_fee(cur1), self.get_withdrawal_fee(cur2)
         ask = [0, 0] if not message["asks"] else [float(message["asks"][0][0]), float(message["asks"][0][1])]

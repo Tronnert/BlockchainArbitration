@@ -9,6 +9,7 @@ class BitgetWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(BITGET_SUB_FILE, BITGET_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(BITGET_MAX_SYMBOLS)
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     @staticmethod
@@ -32,6 +33,8 @@ class BitgetWebsocket(BaseWebsocket):
         if "event" in message:  # сообщение о подписке
             return
         symb = message["arg"]["instId"]
+        if symb not in self.list_of_symbols:
+            return
         cur1, cur2, fee = self.list_of_symbols[symb]
         asks = map(lambda x: (float(x[0]), float(x[1])), message["data"][0]["asks"])
         bids = map(lambda x: (float(x[0]), float(x[1])), message["data"][0]["bids"])

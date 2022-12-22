@@ -8,6 +8,7 @@ class BybitWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(BYBIT_SUB_FILE, BYBIT_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs()
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     @staticmethod
@@ -32,6 +33,8 @@ class BybitWebsocket(BaseWebsocket):
         if "data" not in message:
             return
         message = message["data"]
+        if message["s"] not in self.list_of_symbols:
+            return
         cur1, cur2 = self.list_of_symbols[message["s"]]
         # пришел снапшот, нужно загрузить данные
         if message["b"] and message["a"]:

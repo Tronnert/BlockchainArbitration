@@ -9,6 +9,7 @@ class BinanceWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(BINANCE_SUB_FILE, BINANCE_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(BINANCE_MAX_SYMBOLS)
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     def made_sub_json(self) -> list[dict]:
@@ -43,7 +44,7 @@ class BinanceWebsocket(BaseWebsocket):
 
     def process(self, message: dict) -> None:
         """Обработка данных"""
-        if "s" not in message:
+        if "s" not in message or message["s"] not in self.list_of_symbols:
             return
         symb = message["s"]
         cur1, cur2, fee = self.list_of_symbols[symb]

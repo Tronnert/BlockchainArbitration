@@ -8,6 +8,7 @@ class KrakenWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(KRAKEN_SUB_FILE, KRAKEN_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs()
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     def get_top_pairs(self) -> dict:
@@ -40,6 +41,8 @@ class KrakenWebsocket(BaseWebsocket):
         if isinstance(message, dict):
             return
         symb = message[-1]
+        if symb not in self.list_of_symbols:
+            return
         cur1, cur2 = self.list_of_symbols[symb][:-1]
         if 'as' in message[1].keys():
             bids, asks = message[1]["bs"], message[1]["as"]

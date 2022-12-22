@@ -10,6 +10,7 @@ class GateWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(GATES_IO_MAX_SYMBOLS)
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     def made_sub_json(self) -> dict:
@@ -40,7 +41,7 @@ class GateWebsocket(BaseWebsocket):
     def process(self, message: dict) -> None:
         """Обработка данных"""
         message = message["result"]
-        if 's' not in message.keys():
+        if 's' not in message.keys() or message["s"] not in self.list_of_symbols:
             return
         cur1, cur2, fee = self.list_of_symbols[message["s"]]
         self.update_resent(

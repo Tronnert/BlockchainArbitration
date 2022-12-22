@@ -2,7 +2,7 @@ import websocket
 import threading
 import json
 from consts import DIFFERENT_NAMES_FILE_NAME, EXCHANGE_FEES
-from functions import stable_decimal_places as norm
+from functions import stable_decimal_places as norm, get_mult_symbols
 
 
 class BaseWebsocket:
@@ -21,6 +21,13 @@ class BaseWebsocket:
         )
         self.websocket_thread = threading.Thread(target=self.run_websocket)
         self.list_of_symbols = {}
+
+    def delete_mult_symbols(self):
+        """Убирает те символы, у которых base или quote имют по несколько
+        криптовалют"""
+        mult = get_mult_symbols()
+        self.list_of_symbols = {i: j for i, j in self.list_of_symbols.items()
+                                if j[0] not in mult and j[1] not in mult}
 
     def set_echo(self, val):
         self.echo = val

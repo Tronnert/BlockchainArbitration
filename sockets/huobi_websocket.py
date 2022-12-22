@@ -11,6 +11,7 @@ class HuobiWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(HUOBI_SUB_FILE, HUOBI_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(HUOBI_MAX_SYMBOLS)
+        self.delete_mult_symbols()
         self.add_pattern_to_resent()
 
     def made_sub_json(self) -> list[dict]:
@@ -39,6 +40,8 @@ class HuobiWebsocket(BaseWebsocket):
             return
         message = message['tick']
         symb = message["symbol"].upper()
+        if symb not in self.list_of_symbols:
+            return
         cur1, cur2 = self.list_of_symbols[symb]
         self.update_resent(
             symb, base=cur1, quote=cur2, bidFee=self.fee, askFee=self.fee,
