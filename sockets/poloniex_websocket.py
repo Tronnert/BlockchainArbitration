@@ -18,11 +18,9 @@ class PoloniexWebsocket(BaseWebsocket):
         self.get_withdrawal_fee('BTC')
 
     @staticmethod
-    def get_withdrawal_fee(currency) -> float:
+    def get_withdrawal_fee(currency) -> tuple[float, str]:
         link = f'https://api.poloniex.com/currencies/{currency}'
-        return float(get(link).json()[currency]['withdrawalFee'])
-
-
+        return float(get(link).json()[currency]['withdrawalFee']), "fixed"
 
     @staticmethod
     def get_fee() -> float:
@@ -40,7 +38,7 @@ class PoloniexWebsocket(BaseWebsocket):
             resp = get(POLONIEX_FEE, headers=header)
             if resp.status_code != 200:
                 raise TypeError
-            return resp.json()["takerRate"]
+            return float(resp.json()["takerRate"])
         except TypeError:
             return 1
 
@@ -64,5 +62,5 @@ class PoloniexWebsocket(BaseWebsocket):
         ask = [0, 0] if not message["asks"] else [float(message["asks"][0][0]), float(message["asks"][0][1])]
         bid = [0, 0] if not message["bids"] else [float(message["bids"][0][0]), float(message["bids"][0][1])]
         self.resent[message["symbol"]] = (
-            cur1, cur2, self.get_withdrawal_fee(cur1), self.get_withdrawal_fee(cur2), "poloniex", *bid, self.fee, *ask, self.fee
+            cur1, cur2, *self.get_withdrawal_fee(cur1), *self.get_withdrawal_fee(cur2), "poloniex", *bid, self.fee, *ask, self.fee
         )
