@@ -17,9 +17,9 @@ parser.add_argument("--filename", default="logs.tsv", nargs="?")
 if __name__ == '__main__':
     args = parser.parse_args()
     event = threading.Event()
-    # to_start = [BinanceWebsocket(), PoloniexWebsocket(), KrakenWebsocket(),
-    #             GateWebsocket(), HuobiWebsocket(), BybitWebsocket(), BitgetWebsocket()]
-    to_start = [BinanceWebsocket(), PoloniexWebsocket(), GateWebsocket(), HuobiWebsocket(), BybitWebsocket()]
+    to_start = [BinanceWebsocket(), PoloniexWebsocket(), KrakenWebsocket(),
+                GateWebsocket(), HuobiWebsocket(), BybitWebsocket(),
+                BitgetWebsocket()]
     [socket.start() for socket in to_start]
     scheduler = Scheduler(*to_start, duration=args.duration, event=event,
                           filename=args.filename)

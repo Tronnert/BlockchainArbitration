@@ -8,6 +8,7 @@ class KrakenWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(KRAKEN_SUB_FILE, KRAKEN_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs()
+        self.add_pattern_to_resent()
 
     def get_top_pairs(self) -> dict:
         resp = get(KRAKEN_SYMBOLS).json()["result"]
@@ -28,8 +29,9 @@ class KrakenWebsocket(BaseWebsocket):
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
         sub_json = super().made_sub_json()
-        symbs = [i[:-1] for i in self.list_of_symbols.values()]
-        sub_json["pair"] = list(map(lambda x: "/".join(x), symbs))
+        #symbs = [i[:-1] for i in self.list_of_symbols.values()]
+        #sub_json["pair"] = list(map(lambda x: "/".join(x), symbs))
+        sub_json["pair"] = list(self.list_of_symbols.keys())
         return sub_json
 
     def process(self, message: list) -> None:
@@ -44,27 +46,26 @@ class KrakenWebsocket(BaseWebsocket):
                 bids = [[0, 0]]
             if not asks:
                 asks = [[0, 0]]
-            self.resent[symb] = (
-                cur1, cur2, "kraken", float(bids[0][0]), float(bids[0][1]),
-                self.define_fee(symb, bids[0][1]),
-                float(asks[0][0]), float(asks[0][1]),
-                self.define_fee(message[3], asks[0][1])
+            self.update_resent(
+                symb, base=cur1, quote=cur2, exchange="kraken",
+                bidPrice=float(bids[0][0]), bidQty=float(bids[0][1]),
+                askPrice=float(asks[0][0]), askQty=float(asks[0][1]),
+                takerFee=self.define_fee(symb, min(float(asks[0][1]), float(bids[0][1])))
             )
         else:
             if 'a' in message[1].keys():
                 asks = message[1]["a"]
                 if not asks:
                     asks = [[0, 0]]
-                self.resent[symb] = (
-                    *self.resent[message[3]][:-3], float(asks[0][0]),
-                    float(asks[0][1]), self.define_fee(symb, asks[0][1])
+                self.update_resent(
+                    symb, askPrice=float(asks[0][0]), askQty=float(asks[0][1]),
+                    takerFee=self.define_fee(symb, min(float(asks[0][1]), self.resent[symb]["bidQty"]))
                 )
             if 'b' in message[1].keys():
                 bids = message[1]["b"]
                 if not bids:
                     bids = [[0, 0]]
-                self.resent[symb] = (
-                    *self.resent[message[3]][:3], float(bids[0][0]),
-                    float(bids[0][1]), self.define_fee(symb, bids[0][1]),
-                    *self.resent[message[3]][-3:]
+                self.update_resent(
+                    symb, bidPrice=float(bids[0][0]), bidQty=float(bids[0][1]),
+                    takerFee=self.define_fee(symb, min(float(bids[0][1]), self.resent[symb]["askQty"]))
                 )
