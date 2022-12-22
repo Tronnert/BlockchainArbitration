@@ -58,6 +58,8 @@ class PoloniexWebsocket(BaseWebsocket):
 
     def process(self, message: dict) -> None:
         """Обработка данных"""
+        if "data" not in message:
+            return
         message = message["data"][0]
         cur1, cur2 = message["symbol"].split('_')
         fee1, fee2 = self.get_withdrawal_fee(cur1), self.get_withdrawal_fee(cur2)
