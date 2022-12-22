@@ -15,10 +15,14 @@ class BaseWebsocket:
         self.fee = json.load(open(EXCHANGE_FEES)).get(str(self), None)
         self.different_names = json.load(open(DIFFERENT_NAMES_FILE_NAME))
         self.wsa = websocket.WebSocketApp(
-            self.streamname, on_message=self.on_message, on_open=self.on_open
+            self.streamname, on_message=self.on_message, on_open=self.on_open,
+            on_error=lambda x, y: self.excepthook(x, y)
         )
         self.websocket_thread = threading.Thread(target=self.run_websocket)
         self.list_of_symbols = {}
+
+    def excepthook(self, _, msg):
+        print(f"An error occuried in {self} dur to {msg}")
 
     def __repr__(self):
         return self.__class__.__name__

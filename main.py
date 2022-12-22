@@ -8,8 +8,7 @@ from sockets.bybit_websocket import BybitWebsocket
 from sockets.bitget_websocket import BitgetWebsocket
 
 if __name__ == "__main__":
-    filename = "test_get.tsv"
-
+    filename = "test_exc.tsv"
     to_start = [BinanceWebsocket(), BybitWebsocket(), BitgetWebsocket(),
                 PoloniexWebsocket(), GateWebsocket(), HuobiWebsocket(),
                 KrakenWebsocket()]
