@@ -9,6 +9,7 @@ class BinanceWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(BINANCE_SUB_FILE, BINANCE_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(BINANCE_MAX_SYMBOLS)
+        self.add_pattern_to_resent()
 
     def made_sub_json(self) -> list[dict]:
         """Создание параметров соединения"""
@@ -42,11 +43,13 @@ class BinanceWebsocket(BaseWebsocket):
 
     def process(self, message: dict) -> None:
         """Обработка данных"""
+        if "s" not in message:
+            return
         symb = message["s"]
         cur1, cur2, fee = self.list_of_symbols[symb]
-        self.resent[symb] = (
-            cur1, cur2, "binance", float(message["b"]),
-            float(message["B"]), fee, float(message["a"]), float(message["A"]),
-            fee
-
+        self.update_resent(
+            symb, base=cur1, quote=cur2, exchange="binance",
+            bidPrice=float(message["b"]), bidQty=float(message["B"]),
+            askPrice=float(message["a"]), askQty=float(message["A"]),
+            bidFee=fee, askFee=fee
         )

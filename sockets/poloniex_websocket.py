@@ -45,7 +45,7 @@ class PoloniexWebsocket(BaseWebsocket):
     def get_top_pairs(self, top: int) -> dict:
         ticker24 = sorted(get(POLONIEX_TICKER).json(),
                           key=lambda x: x["tradeCount"], reverse=True)[:top]
-        pairs = {i["symbol"].replace('_', ''): self.rename(i["symbol"].split('_')) for i in ticker24}
+        pairs = {i["symbol"]: self.rename(i["symbol"].split('_')) for i in ticker24}
         return pairs
 
     def made_sub_json(self) -> dict:

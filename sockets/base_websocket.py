@@ -26,6 +26,24 @@ class BaseWebsocket:
     def __str__(self):
         return repr(self)
 
+    @staticmethod
+    def get_pattern():
+        """Возвращает набор столбцов создаваемого датасета"""
+        return ["base", "quote", "baseWithdrawalFee", "baseWithdrawalFeeType",
+                "askWithdrawalFee", "askWithdrawalFeeType", "exchange",
+                "bidPrice", "bidQty", "bidFee", "askPrice", "askQty", "askFee"]
+
+    def add_pattern_to_resent(self):
+        """Добавляет в resent словари с ключами - столбцами датасета"""
+        pattern = self.get_pattern()
+        for symb in self.list_of_symbols:
+            self.resent[symb] = {i: None for i in pattern}
+
+    def update_resent(self, symb, **kwargs):
+        """Обновление словаря resent"""
+        for key, val in kwargs.items():
+            self.resent[symb][key] = val
+
     def start(self) -> None:
         self.websocket_thread.start()
 
@@ -37,13 +55,21 @@ class BaseWebsocket:
         """Переименование пар"""
         return tuple(map(lambda x: self.different_names.get(x, x), data))
 
+    def get_in_order(self, vals):
+        """Возвращает значения в порядке следования столбцов"""
+        return [vals.get(i, None) for i in self.get_pattern()]
+
     def job(self, now_time: str, file) -> None:
         """Запись данных в файл"""
         x = self.resent.copy().values()
-        if not x:
+        data = []
+        for e in x:
+            if not e["base"]:
+                continue
+            data.append('\t'.join((now_time, *map(norm, self.get_in_order(e)))))
+        if not data:
             return
-        data = '\n'.join(['\t'.join((now_time, *map(norm, e))) for e in x])
-        file.write(data + '\n')
+        file.write('\n'.join(data) + '\n')
 
     def on_open(self, ws) -> None:
         """Открытие соединения"""
