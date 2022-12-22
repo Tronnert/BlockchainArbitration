@@ -92,7 +92,7 @@ class BaseWebsocket:
         """Обработка данных"""
         return message
 
-    def run_websocket(self) -> None:
+    def run_websocket(self, *args) -> None:
         """Запуск сокета"""
         print(f"{self} START")
         self.wsa.run_forever()
