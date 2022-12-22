@@ -25,6 +25,7 @@ class KrakenWebsocket(BaseWebsocket):
         for i in range(len(fees) - 1):
             if fees[i][0] <= vol <= fees[i + 1][0]:
                 return fees[i][1] / 100
+        return fees[-1][1] / 100
 
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
