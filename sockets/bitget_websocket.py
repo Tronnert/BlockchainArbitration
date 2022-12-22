@@ -47,10 +47,11 @@ class BitgetWebsocket(BaseWebsocket):
         else:  # обновление данных
             # если последнего ордера на покупку или продажу нет, надо взять
             # следующий ордер, иначе взять минимльный/максимальный из текущего и нового)
-            ask = self.resent[3]
+            ask = self.resent[symb]["askPrice"], self.resent[symb]["askQty"]
             ask = best_ask if self.get_by_price(ask, asks) == 0 else min(ask, best_ask, key=lambda x: x[0])
-            bid = self.resent[6]
+            bid = self.resent[symb]["bidPrice"], self.resent[symb]["bidQty"]
             bid = best_bid if self.get_by_price(bid, bids) == 0 else max(bid, best_bid, key=lambda x: x[0])
+            print(ask, bid)
             self.update_resent(
                 symb, base=cur1, quote=cur2, exchange="bitget", takerFee=fee,
                 bidPrice=bid[0], bidQty=bid[1], askPrice=ask[0], askQty=ask[1]
