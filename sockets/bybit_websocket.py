@@ -41,6 +41,7 @@ class BybitWebsocket(BaseWebsocket):
             bids, asks = message["b"], message["a"]
             self.update_resent(
                 message["s"], base=cur1, quote=cur2, exchange="bybit",
+                baseWithdrawalFee=self.withdrawal_fee,
                 bidFee=self.fee, bidPrice=float(bids[0][0]),
                 bidQty=float(bids[0][1]), askPrice=float(asks[0][0]),
                 askQty=float(asks[0][1]), askFee=self.fee

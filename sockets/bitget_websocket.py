@@ -43,6 +43,7 @@ class BitgetWebsocket(BaseWebsocket):
         if message["action"] == "snapshot":  # новые данные
             self.update_resent(
                 symb, base=cur1, quote=cur2, exchange="bitget",
+                baseWithdrawalFee=self.withdrawal_fee,
                 bidPrice=best_bid[0], bidQty=best_bid[1], askPrice=best_ask[0],
                 askQty=best_ask[1], bidFee=fee, askFee=fee
             )
@@ -55,6 +56,7 @@ class BitgetWebsocket(BaseWebsocket):
             bid = best_bid if self.get_by_price(bid, bids) == 0 else max(bid, best_bid, key=lambda x: x[0])
             self.update_resent(
                 symb, base=cur1, quote=cur2, exchange="bitget",
+                baseWithdrawalFee=self.withdrawal_fee,
                 bidPrice=bid[0], bidQty=bid[1], askPrice=ask[0], askQty=ask[1],
                 bidFee=fee, askFee=fee
            )

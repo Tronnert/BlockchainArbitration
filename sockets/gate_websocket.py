@@ -46,6 +46,7 @@ class GateWebsocket(BaseWebsocket):
         cur1, cur2, fee = self.list_of_symbols[message["s"]]
         self.update_resent(
             message["s"], base=cur1, quote=cur2, exchange="gate",
+            baseWithdrawalFee=self.withdrawal_fee,
             bidFee=fee, bidPrice=float(message["b"]),
             bidQty=float(message["B"]), askPrice=float(message["a"]),
             askQty=float(message["A"]), askFee=fee

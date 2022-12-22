@@ -19,9 +19,9 @@ class PoloniexWebsocket(BaseWebsocket):
         self.add_pattern_to_resent()
 
     @staticmethod
-    def get_withdrawal_fee(currency) -> tuple[float, str]:
+    def get_withdrawal_fee(currency) -> float:
         link = f'https://api.poloniex.com/currencies/{currency}'
-        return float(get(link).json()[currency]['withdrawalFee']), "fixed"
+        return float(get(link).json()[currency]['withdrawalFee'])
 
     @staticmethod
     def get_fee() -> float:
@@ -65,16 +65,14 @@ class PoloniexWebsocket(BaseWebsocket):
         if message["symbol"] not in self.list_of_symbols:
             return
         cur1, cur2 = message["symbol"].split('_')
-        fee1, fee2 = self.get_withdrawal_fee(cur1), self.get_withdrawal_fee(cur2)
+        #withdrawal_fee = self.get_withdrawal_fee(cur1)
         ask = [0, 0] if not message["asks"] else [float(message["asks"][0][0]), float(message["asks"][0][1])]
         bid = [0, 0] if not message["bids"] else [float(message["bids"][0][0]), float(message["bids"][0][1])]
         self.update_resent(
             message["symbol"], base=cur1, quote=cur2, exchange="poloniex",
-            baseWithdrawalFee=fee1[0], baseWithdrawalFeeType=fee1[1],
-            quoteWithdrawalFee=fee2[0], quoteWithdrawalFeeType=fee2[1],
+            baseWithdrawalFee=self.withdrawal_fee,
             bidPrice=bid[0], bidQty=bid[1], bidFee=self.fee,
             askPrice=ask[0], askQty=ask[1], askFee=self.fee
 
 
         )
-        #print(self.resent[message["symbol"]])

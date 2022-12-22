@@ -52,6 +52,7 @@ class KrakenWebsocket(BaseWebsocket):
                 asks = [[0, 0]]
             self.update_resent(
                 symb, base=cur1, quote=cur2, exchange="kraken",
+                baseWithdrawalFee=self.withdrawal_fee,
                 bidPrice=float(bids[0][0]), bidQty=float(bids[0][1]),
                 askPrice=float(asks[0][0]), askQty=float(asks[0][1]),
                 bidFee=self.define_fee(symb, float(bids[0][1])),

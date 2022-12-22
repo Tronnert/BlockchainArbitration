@@ -50,6 +50,7 @@ class BinanceWebsocket(BaseWebsocket):
         cur1, cur2, fee = self.list_of_symbols[symb]
         self.update_resent(
             symb, base=cur1, quote=cur2, exchange="binance",
+            baseWithdrawalFee=self.withdrawal_fee,
             bidPrice=float(message["b"]), bidQty=float(message["B"]),
             askPrice=float(message["a"]), askQty=float(message["A"]),
             bidFee=fee, askFee=fee

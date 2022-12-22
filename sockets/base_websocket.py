@@ -20,6 +20,7 @@ class BaseWebsocket:
             on_error=lambda x, y: self.excepthook(x, y), on_close=self.run_websocket
         )
         self.websocket_thread = threading.Thread(target=self.run_websocket)
+        self.withdrawal_fee = 0.001
         self.list_of_symbols = {}
 
     def delete_mult_symbols(self):
@@ -45,8 +46,7 @@ class BaseWebsocket:
     @staticmethod
     def get_pattern():
         """Возвращает набор столбцов создаваемого датасета"""
-        return ["base", "quote", "baseWithdrawalFee", "baseWithdrawalFeeType",
-                "quoteWithdrawalFee", "quoteWithdrawalFeeType", "exchange",
+        return ["base", "quote", "baseWithdrawalFee", "exchange",
                 "bidPrice", "bidQty", "bidFee", "askPrice", "askQty", "askFee"
                 ]
 
