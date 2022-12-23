@@ -3,6 +3,9 @@ findspark.init()
 from pyspark.sql import SparkSession
 from pyspark.sql.types import ArrayType, LongType, StructType, StructField, StringType, DoubleType, BooleanType, IntegerType
 import pyspark.sql.functions as f
+import sys
+sys.path.append("../")
+from functions import get_crypto_quotes
 
 
 def get_id(x):
@@ -39,6 +42,10 @@ def mult(rows):
     return multed
 
 
+def price_usd(x):
+    return quotes[x]
+
+
 spark = SparkSession.builder.appName('Crypto').getOrCreate()
 SCHEMA = StructType([
     StructField("dt", LongType(), False),
@@ -58,10 +65,13 @@ func_id = f.udf(get_id, DoubleType())
 func_mult = f.udf(mult, ArrayType(ArrayType(DoubleType())))
 func_len = f.udf(array_len, IntegerType())
 func_name = f.udf(get_name, StringType())
+func_price = f.udf(price_usd, DoubleType())
 
 df = spark.read.options(delimiter='\t', ).csv("../logs/to_find.tsv", header=False, schema=SCHEMA)
 df = df.withColumn("idExchange", func_id("exchange"))
 
+print([i["quote"] for i in df.select("quote").distinct().collect()])
+quotes = get_crypto_quotes([i["quote"] for i in df.select("quote").distinct().collect()])
 test = df.groupBy(['dt', "base", "quote"]).agg(f.collect_list(f.struct(
     "idExchange", "bidPrice", "bidQty", "askPrice", "askQty", "bidFee", "askFee", "baseWithdrawalFee"
 )).alias("data")).withColumn("multed", func_mult("data")).withColumn("len", func_len("multed"))
@@ -82,6 +92,6 @@ test = test.withColumnRenamed("col[0]", "bidExchange")\
 test = test.withColumn("Qty", f.least("bidQty", "askQty"))\
            .withColumn("revenue", (f.col("bidPrice") * (1 - f.col("bidFee") * (1 - f.col("baseWithDrawalFee")))
                                    - f.col("askPrice") / (1 - f.col("askFee"))) * f.col("Qty"))
-
+test = test.withColumn("revenueUSD", f.col("revenue") * func_price("quote"))
 test = test.withColumn("bidExchange", func_name("bidExchange")).withColumn("askExchange", func_name("askExchange"))
-test.repartition(1).write.options(header='True', encoding="utf-8").csv("simple_revenue", sep="\t")
+test.repartition(1).write.options(header='True', encoding="utf-8").csv("revenue_usd", sep="\t")

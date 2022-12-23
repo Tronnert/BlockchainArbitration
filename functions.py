@@ -1,6 +1,7 @@
 import sys
 from requests import get
-from consts import COINCAP_API, COINCAP_CRYPTOS
+from consts import COINCAP_API, COINCAP_CRYPTOS, COINCAP_QUOTES, \
+    EXCHANGE_RATE_API
 
 
 def stable_decimal_places(one):
@@ -34,4 +35,26 @@ def get_mult_symbols() -> set[str]:
         symb = i["symbol"]
         symbols[symb] = symbols.get(symb, 0) + 1
     return set(filter(lambda x: symbols[x] > 1, symbols.keys()))
+
+
+def get_crypto_quotes(cryptos) -> dict:
+    """Для каждой криптовалюты возвращает её последнюю стоимость в долларах"""
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': COINCAP_API,
+    }
+    resp = get(COINCAP_QUOTES, headers=headers, params={"symbol": ','.join(cryptos)}).json()["data"]
+    ans = {}
+    fiat = []
+    for key, val in resp.items():
+        if val:
+            ans[key] = float(val[0]["quote"]['USD']["price"])
+        else:
+            fiat.append(key)
+    if not fiat:
+        return ans
+    params = {"base": "USD", "symbols": ','.join(fiat)}
+    resp2 = get(EXCHANGE_RATE_API, params=params).json()["rates"]
+    ans.update({i: 1 / float(resp2[i]) for i in fiat})
+    return ans
 
