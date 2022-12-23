@@ -70,7 +70,6 @@ func_price = f.udf(price_usd, DoubleType())
 df = spark.read.options(delimiter='\t', ).csv("../logs/to_find.tsv", header=False, schema=SCHEMA)
 df = df.withColumn("idExchange", func_id("exchange"))
 
-print([i["quote"] for i in df.select("quote").distinct().collect()])
 quotes = get_crypto_quotes([i["quote"] for i in df.select("quote").distinct().collect()])
 test = df.groupBy(['dt', "base", "quote"]).agg(f.collect_list(f.struct(
     "idExchange", "bidPrice", "bidQty", "askPrice", "askQty", "bidFee", "askFee", "baseWithdrawalFee"
