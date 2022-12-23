@@ -60,36 +60,50 @@ def get_crypto_quotes(cryptos) -> dict:
     return ans
 
 
-def draw_bid_exchange(df, exchange: str, size=(10, 10), rows=3, pad=3,
+def draw_symb_or_exchange(df, name: str, type_name="exchange", size=(10, 10), rows=3, pad=3,
                       exclude_loss=False, prefix='', suffix=''):
-    rows_with_exchange = df[df["bidExchange"] == exchange]
-    draw_exchanges(rows_with_exchange, size, rows, pad, exclude_loss, prefix, suffix)
+    """Если type_name='exchange', строит для каждой пары (name, askExchange) 
+    распределение прибыли по топ-5 символам по средней прибыли 
+    (name здесь - биржа с ордером продажи).
+    Если type_name='symbol', строит для символа распределение его прибыли по 
+    всем парам (bidExchange, askExchange)"""
+    if type_name == "exchange":
+        data_rows = df[df["bidExchange"] == name]
+    else:
+        data_rows = df[df["symbol"] == name]
+    draw_sub(data_rows, name, type_name=type_name, size=size, rows=rows, 
+             pad=pad,  exclude_loss=exclude_loss, prefix=prefix, suffix=suffix)
 
-
-def draw_exchanges(df, size=(10, 10), rows=3, pad=3, exclude_loss=False, prefix='', suffix=''):
-    """Для каждой биржи, где был ask order, рисует графики распределения прибыли по 10 символам,
-    у которых была максимальная прибыль"""
+    
+def draw_sub(df, name, type_name="exchange", size=(10, 10), rows=3, pad=3, 
+             exclude_loss=False, prefix='', suffix=''):
     i = 1
     figure = plt.figure(figsize=size)
-    figure.suptitle(f"{prefix}{df['bidExchange'].unique()[0]} - exchnge of bid{suffix}")
+    figure.suptitle(f"{prefix}{name}{suffix}")
     plt.tight_layout(pad=pad)
-    len_ = df["askExchange"].nunique()
-    for exch1, data in df.groupby("askExchange"):
+    group = df.groupby("askExchange") if type_name == "exchange" else df.groupby(["bidExchange", "askExchange"])
+    len_ = len(group)
+    for name, data in group:
         sub = figure.add_subplot(rows, (len_ + rows - 1) // rows, i)
-        draw_exchange_symbols(sub, data, exclude_loss=exclude_loss)
+        draw_based_on_dt(sub, data, name, type_name=type_name, exclude_loss=exclude_loss)
         i += 1
 
 
-def draw_exchange_symbols(subplot, df, exclude_loss=False):
-    """Рисует графики прибыли символов по времени"""
-    symbols = df.groupby("symbol")
-    for symb, data in symbols:
-        data = data.sort_values("dt")
-        if exclude_loss and (data["revenueUSD"] <= 0).all():
-            continue
-        subplot.plot(data["dt"], data["revenueUSD"], label=symb)
+def draw_based_on_dt(subplot, df, title, type_name="exchange", exclude_loss=False):
+    title = '/'.join(title) if isinstance(title, tuple) else title
+    """Рисует графики по времени"""
+    if type_name == "exchange":
+        for name, data in df.groupby("symbol"):
+            data = data.sort_values("dt")
+            if exclude_loss and (data["revenueUSD"] <= 0).all():
+                continue
+            subplot.plot(data["dt"], data["revenueUSD"], label=name)
+    else:
+        df = df.sort_values("dt")
+        if not exclude_loss or exclude_loss and not (df["revenueUSD"] <= 0).all():
+            subplot.plot(df["dt"], df["revenueUSD"], label=title)
     subplot.axhline(y=0, color='black', linestyle='--', linewidth=3)
-    subplot.title.set_text(df["askExchange"].unique()[0])
+    subplot.title.set_text(title)
     subplot.set_xlabel("dt")
     subplot.set_ylabel("revenue in USD")
     subplot.legend()
