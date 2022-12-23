@@ -61,17 +61,17 @@ def get_crypto_quotes(cryptos) -> dict:
 
 
 def draw_bid_exchange(df, exchange: str, size=(10, 10), rows=3, pad=3,
-                      exclude_loss=False):
+                      exclude_loss=False, prefix='', suffix=''):
     rows_with_exchange = df[df["bidExchange"] == exchange]
-    draw_exchanges(rows_with_exchange, size, rows, pad, exclude_loss)
+    draw_exchanges(rows_with_exchange, size, rows, pad, exclude_loss, prefix, suffix)
 
 
-def draw_exchanges(df, size=(10, 10), rows=3, pad=3, exclude_loss=False):
+def draw_exchanges(df, size=(10, 10), rows=3, pad=3, exclude_loss=False, prefix='', suffix=''):
     """Для каждой биржи, где был ask order, рисует графики распределения прибыли по 10 символам,
     у которых была максимальная прибыль"""
     i = 1
     figure = plt.figure(figsize=size)
-    figure.suptitle(f"{df['bidExchange'].unique()[0]} - exchnge of bid")
+    figure.suptitle(f"{prefix}{df['bidExchange'].unique()[0]} - exchnge of bid{suffix}")
     plt.tight_layout(pad=pad)
     len_ = df["askExchange"].nunique()
     for exch1, data in df.groupby("askExchange"):
