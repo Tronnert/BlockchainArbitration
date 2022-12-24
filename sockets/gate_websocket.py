@@ -10,6 +10,8 @@ class GateWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(GATES_IO_SUB_FILE, GATES_IO_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(GATES_IO_MAX_SYMBOLS)
+        self.delete_mult_symbols()
+        self.add_pattern_to_resent()
 
     def made_sub_json(self) -> dict:
         """Создание параметров соединения"""
@@ -24,23 +26,28 @@ class GateWebsocket(BaseWebsocket):
             get(GATES_IO_TICKER).json(),
             key=lambda x: x['quote_volume'], reverse=True
         )[:top]
-        pairs = {i["id"]: {"base": i["base"], "quote": i["quote"]} for i in
+        pairs = {i["id"]: {"base": i["base"], "quote": i["quote"], "fee": i["fee"]} for i in
                  get(GATES_IO_SYMBOLS).json()}
         answer = {}
         for i in ticker_pairs:
-            answer[i['currency_pair']] = {
-                'base': pairs[i['currency_pair']]['base'],
-                'quote': pairs[i['currency_pair']]['quote']
-            }
+            answer[i['currency_pair']] = (
+                pairs[i['currency_pair']]['base'],
+                pairs[i['currency_pair']]['quote'],
+                float(pairs[i['currency_pair']]['fee']) / 100
+
+            )
         return answer
 
     def process(self, message: dict) -> None:
         """Обработка данных"""
         message = message["result"]
-        if 's' not in message.keys():
+        if 's' not in message.keys() or message["s"] not in self.list_of_symbols:
             return
-        self.resent[message['s']] = (
-            *self.list_of_symbols[message['s']].values(), "gate", float(message["b"]),
-            float(message["B"]), float(message["a"]), float(message["A"])
+        cur1, cur2, fee = self.list_of_symbols[message["s"]]
+        self.update_resent(
+            message["s"], base=cur1, quote=cur2, exchange="gate",
+            baseWithdrawalFee=self.withdrawal_fee,
+            bidFee=fee, bidPrice=float(message["b"]),
+            bidQty=float(message["B"]), askPrice=float(message["a"]),
+            askQty=float(message["A"]), askFee=fee
         )
-

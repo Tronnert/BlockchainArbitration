@@ -11,6 +11,8 @@ class HuobiWebsocket(BaseWebsocket):
     def __init__(self, *args) -> None:
         super().__init__(HUOBI_SUB_FILE, HUOBI_STREAM_NAME, *args)
         self.list_of_symbols = self.get_top_pairs(HUOBI_MAX_SYMBOLS)
+        self.delete_mult_symbols()
+        self.add_pattern_to_resent()
 
     def made_sub_json(self) -> list[dict]:
         """Создание параметров подключения"""
@@ -37,12 +39,18 @@ class HuobiWebsocket(BaseWebsocket):
         if "tick" not in message:
             return
         message = message['tick']
-        self.resent[message["symbol"]] = (
-            *self.list_of_symbols[message["symbol"].upper()], "huobi",
-            float(message["bid"]), float(message["bidSize"]),
-            float(message["ask"]), float(message["askSize"])
+        symb = message["symbol"].upper()
+        if symb not in self.list_of_symbols:
+            return
+        cur1, cur2 = self.list_of_symbols[symb]
+        self.update_resent(
+            symb, base=cur1, quote=cur2, bidFee=self.fee, askFee=self.fee,
+            baseWithdrawalFee=self.withdrawal_fee,
+            bidPrice=float(message["bid"]), bidQty=float(message["bidSize"]),
+            askPrice=float(message["ask"]), askQty=float(message["askSize"]),
+            exchange="huobi"
         )
 
     def on_message(self, ws, mess):
         """Получение данных"""
-        self.process(json.loads(gzip.decompress(mess)))
+        self.process(json.loads(gzip.decompress(bytes(mess))))
