@@ -67,7 +67,7 @@ func_len = f.udf(array_len, IntegerType())
 func_name = f.udf(get_name, StringType())
 func_price = f.udf(price_usd, DoubleType())
 
-df = spark.read.options(delimiter='\t', ).csv("../logs/to_find.tsv", header=False, schema=SCHEMA)
+df = spark.read.options(delimiter='\t', ).csv("../logs/2022.12.24_03.06.00_60.tsv", header=False, schema=SCHEMA)
 df = df.withColumn("idExchange", func_id("exchange"))
 
 quotes = get_crypto_quotes([i["quote"] for i in df.select("quote").distinct().collect()])
@@ -141,6 +141,6 @@ test3 = test3[test3["is_not_empty"] == True].withColumn("avg_arb", func2("arbitr
 
 test3 = test3.drop('data', 'arbitrations')
 
-test3.write.option("delimiter", "\t").option("header", True).csv('time_output')
+test3.repartition(1).write.option("delimiter", "\t").option("header", True).csv('time_output')
 
 #print(test3.sort("avg_arb", ascending=False).show())
