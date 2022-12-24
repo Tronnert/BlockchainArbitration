@@ -24,15 +24,19 @@ C:.
 |   scheduler.py
 |             
 +---analysis
-|   |   max_revenue.ipynb
+|   |   avg_duration.ipynb
+|   |   real_revenue.py
 |   |   revenue_file.py
 |   |   revenue_graphs.ipynb
 |   |   save_graphs_images.py
 |   |   time.py
 |   |   
 |   |       
-|   \---revenue
-|           part-00000.csv
+|   +---revenue
+|   |   part-00000.csv
+|   |
+|   \---time_output
+|       part-00000.csv
 |           
 |       
 +---images
@@ -88,7 +92,9 @@ C:.
 
 ```save_graphs_images.py``` - нужен для построения и сохранения графиков (графики распределения прибыли по биржам и графики для наиболее прибыльных символов)
 
-```max_revenue.ipynb``` и ```revenue_graphs.ipynb``` - ноутбуки с графиками
+ ```revenue_graphs.ipynb``` и ```avg_duration.ipynb``` - ноутбуки с графиками
+
+В ```real_revenue.py``` строится datamart по модели получения реальной прибыли с данных 
 
 
 ## Как работать с проектом?
@@ -112,3 +118,4 @@ C:.
 
 Для построения графиков используйте блокноты в папке analysis, указав там путь к датасетам в созданных ранее подпапках
 
+В тексте не написать всех особенностей использования проекта (их много), поэтому для решения вопросов обращайтесь к разработчикам
