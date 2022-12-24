@@ -24,6 +24,7 @@ C:.
 |   scheduler.py
 |             
 +---analysis
+|   |   avg_duration.ipynb
 |   |   max_revenue.ipynb
 |   |   revenue_file.py
 |   |   revenue_graphs.ipynb
@@ -31,8 +32,11 @@ C:.
 |   |   time.py
 |   |   
 |   |       
-|   \---revenue
-|           part-00000.csv
+|   +---revenue
+|   |   part-00000.csv
+|   |
+|   \---time_output
+|       part-00000.csv
 |           
 |       
 +---images
@@ -88,7 +92,7 @@ C:.
 
 ```save_graphs_images.py``` - нужен для построения и сохранения графиков (графики распределения прибыли по биржам и графики для наиболее прибыльных символов)
 
-```max_revenue.ipynb``` и ```revenue_graphs.ipynb``` - ноутбуки с графиками
+```max_revenue.ipynb```, ```revenue_graphs.ipynb``` и ```avg_duration.ipynb``` - ноутбуки с графиками
 
 
 ## Как работать с проектом?
