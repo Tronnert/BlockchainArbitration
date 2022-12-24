@@ -61,7 +61,7 @@ def get_crypto_quotes(cryptos) -> dict:
 
 
 def draw_symb_or_exchange(df, name: str, type_name="exchange", size=(10, 10), rows=3, pad=3,
-                      exclude_loss=False, prefix='', suffix=''):
+                      exclude_loss=False, prefix='', suffix='', save=None):
     """Если type_name='exchange', строит для каждой пары (name, askExchange) 
     распределение прибыли по топ-5 символам по средней прибыли 
     (name здесь - биржа с ордером продажи).
@@ -73,6 +73,8 @@ def draw_symb_or_exchange(df, name: str, type_name="exchange", size=(10, 10), ro
         data_rows = df[df["symbol"] == name]
     draw_sub(data_rows, name, type_name=type_name, size=size, rows=rows, 
              pad=pad,  exclude_loss=exclude_loss, prefix=prefix, suffix=suffix)
+    if save is not None:
+        plt.savefig(f"images/{save}")
 
     
 def draw_sub(df, name, type_name="exchange", size=(10, 10), rows=3, pad=3, 
