@@ -29,7 +29,7 @@ if __name__ == '__main__':
     to_start = [eval(f"{i.capitalize()}Websocket()") for i in exchanges]
     [socket.start() for socket in to_start]
     scheduler = Scheduler(*to_start, duration=args.duration, event=event,
-                          filename=args.filename, progress=progress)
+                          filename=filename, progress=progress)
     scheduler.start()
     scheduler.schedule_thread.join(args.duration)
     event.set()
