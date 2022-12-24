@@ -139,4 +139,8 @@ test3 = test3.withColumn("arbitrations", func("data")) \
     .withColumn("len", func4("arbitrations"))
 test3 = test3[test3["is_not_empty"] == True].withColumn("avg_arb", func2("arbitrations"))
 
-print(test3.sort("avg_arb", ascending=False).show())
+test3 = test3.drop('data', 'arbitrations')
+
+test3.write.option("delimiter", "\t").option("header", True).csv('time_output')
+
+#print(test3.sort("avg_arb", ascending=False).show())
